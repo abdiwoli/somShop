@@ -1,0 +1,123 @@
+/* Container for the element to ensure responsive layout */
+.element-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap onto multiple lines */
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    padding: 10px;
+    overflow: hidden; /* Ensure no overflow */
+  }
+  
+  .element {
+    width: 100%; /* Take up full width of container */
+    max-width: 400px; /* Set a max width for the element */
+    margin: 5px;
+    transition: transform 0.7s;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .element img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .element p {
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    text-align: center; /* Center-align text */
+  }
+  
+  .price {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  
+  .nprice {
+    color: green;
+    font-size: 21px;
+    font-weight: 600;
+  }
+  
+  .oprice {
+    font-size: 19px;
+    font-weight: 400;
+    color: red;
+    text-decoration: line-through;
+  }
+  
+  .element:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .element-container {
+      margin: 10px; /* Reduce margin on smaller screens */
+    }
+  
+    .element {
+      max-width: 100%; /* Allow elements to take full width */
+      margin: 10px 0; /* Increase margin between elements */
+      padding: 10px; /* Reduce padding */
+    }
+  
+    .element p {
+      font-size: 16px; /* Adjust font size */
+    }
+  
+    .price {
+      flex-direction: column; /* Stack price items vertically */
+      gap: 10px; /* Reduce gap between price elements */
+    }
+  
+    .nprice {
+      font-size: 19px; /* Adjust font size */
+    }
+  
+    .oprice {
+      font-size: 17px; /* Adjust font size */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .element-container {
+      margin: 5px; /* Further reduce margin */
+    }
+  
+    .element {
+      max-width: 100%; /* Ensure full width */
+      margin: 5px 0; /* Further reduce margin between elements */
+      padding: 5px; /* Further reduce padding */
+    }
+  
+    .element p {
+      font-size: 14px; /* Further adjust font size */
+    }
+  
+    .price {
+      flex-direction: column; /* Stack price items vertically */
+      gap: 5px; /* Further reduce gap between price elements */
+    }
+  
+    .nprice {
+      font-size: 17px; /* Further adjust font size */
+    }
+  
+    .oprice {
+      font-size: 15px; /* Further adjust font size */
+    }
+  }
+  

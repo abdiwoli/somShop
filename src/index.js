@@ -3,11 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import CatContextProvider from './Providers/CatProvider';
+import { UserProvider } from './Compnents/UserProvider/UserProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <UserProvider>
+    <CatContextProvider>
     <App />
+    </CatContextProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 

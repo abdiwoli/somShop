@@ -1,0 +1,47 @@
+.banner-mage{
+    margin: 29px auto;
+    width: 25%;
+    display: block;
+}
+
+.sort-idx{
+    display: flex;
+    margin: 0px 170px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sort{
+    padding: 10px 20px;
+    border-radius: 40px;
+    border: 1px solid gray;
+}
+
+
+.sort-idx p span {
+    font-weight: 600;
+}
+
+.item-products {
+    margin:20px 171px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    row-gap: 70px;
+}
+
+.more{
+    align-items: center;
+    width: 229px;
+    height: 70px;
+    border-radius: 75px;
+    display: flex;
+    justify-content: center;
+    margin:  150px auto;
+    background: lightgray;
+    color: black;
+    font-size: 19px;
+    font-weight: 400;
+    font-family: poppins;
+}
+
+
