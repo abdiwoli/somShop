@@ -55,8 +55,8 @@ class DBClient {
         return deleteResult.deletedCount;;
     }
 
-    async addUsers(email, password) {
-        const added = await this.db.collection('users').insertOne({email, password});
+    async addUsers(email, password, name) {
+        const added = await this.db.collection('users').insertOne({email, password, name});
         return added.insertedId;
     }
 

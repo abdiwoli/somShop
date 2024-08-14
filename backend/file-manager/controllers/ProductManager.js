@@ -72,30 +72,30 @@ class Product {
 
       static async isOwner(req, res) {
         try{
-          const token = req.headers['x-token'];
-          console.log({token:token});
-          const key = `auth_${token}`;
-          const userId = await redisClient.get(key);
-          const item = await Product.findProduct(req.params.id, userId);
-          res.status(200).json({owner:item ? true : false});
+          const product = await Product.findProduct(req);
+          if (product)
+            res.status(200).json({owner:item ? true : false});
+          else {
+            res.status(200).json({owner:false});
+          }
         } catch (err) {
           res.status(200).json({owner:false});
         }
       }
 
-       static async findProduct(itemId, userId){
+       static async findProduct(req){
+        const token = req.headers['x-token'];
+        console.log({token})
+        const itemId = req.params.id;
+        const key = `auth_${token}`;
+        const userId = await redisClient.get(key);
         const collection = await dbClient.client.db().collection('files');
         const product = await collection.findOne({_id: new ObjectId(itemId), userId:userId});
         return product;
       }
 
       static async deleteProduct(req, res){
-        const token = req.headers['x-token'];
-          console.log({token:token});
-          const key = `auth_${token}`;
-          const userId = await redisClient.get(key);
-          const item = await Product.findProduct(req.params.id, userId);        
-        console.log({userId, item});
+        const item = Product.findProduct(req);       
         if (item)
         {
           const collection = await dbClient.client.db().collection('files');
@@ -130,7 +130,7 @@ class Product {
           fs.mkdirSync(FOLDER_PATH, { recursive: true });
         }
       
-        let file = await files.findOne({ _id: new ObjectId(productId) });
+        let file = await Product.findProduct(req); 
         let filePath;
         let fileId;
       
@@ -199,16 +199,11 @@ class Product {
         const collection = await dbClient.client.db().collection('files');
         
         try {
-          // Find the product
-          const product = await collection.findOne({ _id: new ObjectId(itemId) });
+          const product = await Product.findProduct(req); 
           if (!product) {
             return res.status(404).json({ error: 'Product not found' });
           }
-          // Check if index is valid
-
           const images = product.images || [];
-          console.log('Keys in the product document:', Object.keys(product));
-console.log('Product:', product);
           if (index > -1 && index < images.length) {
             images.splice(index, 1);    
             await collection.updateOne(
@@ -217,7 +212,7 @@ console.log('Product:', product);
             );
             return res.status(200).json({ message: 'Image deleted successfully', images });
           } else {
-            console.log({error:images})
+            console.log({error:product})
             return res.status(400).json({ error: 'Invalid index' });
           }
         } catch (err) {
@@ -237,7 +232,8 @@ console.log('Product:', product);
         try {
             const itemId = req.params.id;
             const collection = await dbClient.client.db().collection('files');
-            const product = await collection.findOne({ _id: new ObjectId(itemId) });
+            const product = await Product.findProduct(req); 
+            console.log(req.params.id)
     
             if (product && data) {
                 const fileData = Buffer.from(data, 'base64');
