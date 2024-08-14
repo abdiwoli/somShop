@@ -19,12 +19,14 @@ router.get('/', (req, res) => {
 router.post('/update-file/:id', Product.updateProduct)
 router.get('/products', Product.getFiles);
 router.get('/owner/:id', Product.isOwner);
-router.delete('/delete-product/:id', Product.deleteProduct);
+router.delete('/additional-image/:id', Product.deleteProduct);
 
 router.get('/status', AppController.getStatus);
 router.get('/stats', AppController.getStats);
 router.post('/users', UsersController.postNew);
 router.delete('/users', UsersController.delUser);
+router.delete('/delete-image/:id/:index', Product.deleteImage);
+router.post('/additional-image/:id', Product.AddAdditionalImage)
 router.get('/collections', FilesController.delete);
 router.get('/connect', AuthController.getConnect);
 router.get('/disconnect', Helper.authUser, AuthController.getDisconnect);
@@ -54,6 +56,7 @@ router.get('/cancel-order', (req, res) => {
 });
 
 router.post('/pay', async (req, res) => {
+  //return res.send(process.env.PAYPAL_CLIENT_SECRET);
   const {orders, userToken} = req.body;
   const user = Helper.userOrder(userToken);
   if (!user){

@@ -46,7 +46,9 @@ class Product {
                   if (file.localPath) {
                     file.localPath = file.localPath.replace(/\\/g, '/');
                     file.image = file.localPath.split('/').pop();
-                    file.images = [file.image, file.image, file.image];
+                    if (!file.images) {
+                      file.images = [file.image, file.image, file.image];
+                    }
                   }
             
                   return file;
@@ -57,7 +59,6 @@ class Product {
               }
             }
             
-            // Return the modified files as a response
             return res.status(200).json(allFiles);
             
       
@@ -120,7 +121,7 @@ class Product {
           description,
         } = req.body;
       
-        const { id: productId } = req.params; // MongoDB document ID
+        const { id: productId } = req.params;
         const files = await dbClient.client.db().collection('files');
         const folderPath = process.env.FOLDER_PATH || '../../../frontend/src/uploads';
         const FOLDER_PATH = path.resolve(__dirname, folderPath);
@@ -133,31 +134,28 @@ class Product {
         let filePath;
         let fileId;
       
-        if (file) {
-          // File exists, handle deletion if necessary
+        if (file && !file.image) {
           if (file.localPath) {
-            // Delete existing file if necessary
             if (fs.existsSync(file.localPath)) {
               fs.unlinkSync(file.localPath);
             }
           }
         }
       
-        // Generate new fileId (filename) and filePath
-        if (type === 'image') {
-          fileId = `${uuidv4()}.${mimeType.split('/')[1]}`; // Generate new file name with extension
+        if (type === 'image' && data) {
+          fileId = `${uuidv4()}.${mimeType.split('/')[1]}`;
+          filePath = path.join(FOLDER_PATH, fileId);
+        } else if (type !== "image"){
+          fileId = uuidv4();
           filePath = path.join(FOLDER_PATH, fileId);
         } else {
-          fileId = uuidv4(); // Generate new unique ID for non-image files
-          filePath = path.join(FOLDER_PATH, fileId);
+          filePath = file.localPath;
         }
       
         if (data) {
-          // Write new file data to the filesystem
           const fileData = Buffer.from(data, 'base64');
           fs.writeFileSync(filePath, fileData);
-        }
-      
+        }      
         const updateDoc = {
           name,
           price,
@@ -168,7 +166,7 @@ class Product {
           parentId,
           localPath: filePath,
           description,
-          image: fileId,
+          image: fileId || file.image,
         };
       
         try {
@@ -195,6 +193,74 @@ class Product {
         }
       }
       
+      static async deleteImage(req, res) {
+        const itemId = req.params.id;
+        const index = parseInt(req.params.index, 10);
+        const collection = await dbClient.client.db().collection('files');
+        
+        try {
+          // Find the product
+          const product = await collection.findOne({ _id: new ObjectId(itemId) });
+          if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+          }
+          // Check if index is valid
+
+          const images = product.images || [];
+          console.log('Keys in the product document:', Object.keys(product));
+console.log('Product:', product);
+          if (index > -1 && index < images.length) {
+            images.splice(index, 1);    
+            await collection.updateOne(
+              { _id: new ObjectId(itemId) },
+              { $set: { images: images } }
+            );
+            return res.status(200).json({ message: 'Image deleted successfully', images });
+          } else {
+            console.log({error:images})
+            return res.status(400).json({ error: 'Invalid index' });
+          }
+        } catch (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'An error occurred while deleting the image' });
+        }
+      }
+
+      static async AddAdditionalImage(req, res) {
+        const { folderPath = '../../../frontend/src/uploads' } = process.env;
+        const FOLDER_PATH = path.resolve(__dirname, folderPath);
+        const { mimeType, data } = req.body;
+        const fileId = uuidv4();
+        const ext = mimeType.split('/')[1];
+        const filePath = path.join(FOLDER_PATH, `${fileId}.${ext}`);
+    
+        try {
+            const itemId = req.params.id;
+            const collection = await dbClient.client.db().collection('files');
+            const product = await collection.findOne({ _id: new ObjectId(itemId) });
+    
+            if (product && data) {
+                const fileData = Buffer.from(data, 'base64');
+                fs.writeFileSync(filePath, fileData); 
+    
+                const images = product.images || [];
+                images.push(`${fileId}.${ext}`); 
+                
+                await collection.updateOne(
+                    { _id: new ObjectId(itemId) }, 
+                    { $set: { images: images } }
+                );
+    
+                return res.status(200).json({ status: "updated" });
+            } else {
+                return res.status(404).json({ status: "not found" });
+            }
+        } catch (error) {
+            return res.status(500).json({ status: "error", message: error.message });
+        }
+    }
+    
+    
 }
 
 export default Product;
