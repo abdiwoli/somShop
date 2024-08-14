@@ -1,0 +1,113 @@
+/* Admin.css */
+
+/* General container styling */
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.product-item {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 10px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for product details */
+.product-id, 
+.product-name, 
+.product-category, 
+.product-price, 
+.product-prev-price, 
+.product-description {
+  margin-bottom: 8px;
+}
+
+.product-image {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  grid-column: span 2;
+  margin-top: 10px;
+}
+
+/* Styling for general buttons */
+.edit-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  width: 20%;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  grid-column: span 2;
+  margin-top: 10px;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+/* Styling for the "Add New Image" button */
+.add-image-button {
+  padding: 5px 10px;
+  width: 20%;
+  border-radius: 10%;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  grid-column: span 2;
+  margin-top: 10px;
+}
+
+.add-image-button:hover {
+  background-color: #218838;
+}
+
+/* Styling for image list */
+.list-images {
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.thumbnail-container {
+  position: relative; 
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.remove-thumbnail {
+  display: none;
+  position: absolute;
+  top: 5px; 
+  right: 25px;
+  background-color: red;
+  color: #fff;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 70%;
+  z-index: 10; 
+}
+
+/* Show remove-thumbnail on hover */
+.thumbnail-container:hover .remove-thumbnail {
+  display: block;
+}

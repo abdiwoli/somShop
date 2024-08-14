@@ -1,0 +1,143 @@
+.notes {
+    padding: 0 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    width: 59%;
+    height: 39vw;
+    margin-bottom: 149px;
+    gap: 30px;
+    background: linear-gradient(180deg, #ffffff 0%, #e0f7fa 50%, #f105354f 80%);
+    color: gray;
+    font-size: 55px;
+    font-weight: 600;
+  }
+  
+  .notes p {
+    color: gray;
+    font-size: 20px;
+  }
+  
+  .notes div {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center content horizontally */
+    border: 1px solid white;
+    border-radius: 79px;
+    width: 100%; /* Adjust width to take full container width */
+    max-width: 699px; /* Limit max width */
+    height: 69px;
+    padding: 0 10px;
+    gap: 10px; /* Add gap between input and button */
+  }
+  
+  .notes input {
+    flex: 1; 
+    margin-left: 30px;
+    border: none;
+    width: 30%;
+    border-radius: 79px;
+    outline: none;
+    color: black;
+    text-align: center;
+    height: 60%;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    padding: 0 10px;
+  }
+  
+  .notes div button {
+    width: 50%;
+    text-align: center;
+    height: 80%;
+    border: none;
+    border-radius: 80px;
+    background: white;
+    color: black; /* Fixed typo here */
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 1024px) {
+    .notes {
+      padding: 0 80px; /* Reduce padding */
+      width: 75%; /* Adjust width */
+      height: auto; /* Adjust height to auto */
+      margin-bottom: 100px; /* Reduce margin-bottom */
+      font-size: 45px; /* Reduce font size */
+    }
+  
+    .notes div {
+      width: 100%;
+      max-width: 500px; /* Adjust max-width */
+      height: 60px; /* Adjust height */
+    }
+  
+    .notes input {
+      width: 40%; /* Adjust width */
+      font-size: 14px; /* Reduce font size */
+    }
+  
+    .notes div button {
+      width: 45%; /* Adjust width */
+      font-size: 14px; /* Reduce font size */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .notes {
+      padding: 0 40px; /* Further reduce padding */
+      width: 85%; /* Adjust width */
+      height: auto; /* Adjust height to auto */
+      margin-bottom: 80px; /* Further reduce margin-bottom */
+      font-size: 35px; /* Further reduce font size */
+    }
+  
+    .notes div {
+      width: 100%;
+      max-width: 400px; /* Further adjust max-width */
+      height: 50px; /* Further adjust height */
+    }
+  
+    .notes input {
+      width: 50%; /* Further adjust width */
+      font-size: 12px; /* Further reduce font size */
+    }
+  
+    .notes div button {
+      width: 50%; /* Keep width consistent */
+      font-size: 12px; /* Further reduce font size */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .notes {
+      padding: 0 20px; /* Reduce padding further */
+      width: 90%; /* Adjust width */
+      height: auto; /* Adjust height to auto */
+      margin-bottom: 60px; /* Further reduce margin-bottom */
+      font-size: 25px; /* Reduce font size significantly */
+    }
+  
+    .notes div {
+      width: 100%;
+      max-width: 300px; /* Further adjust max-width */
+      height: 40px; /* Further adjust height */
+    }
+  
+    .notes input {
+      width: 60%; /* Adjust width */
+      font-size: 10px; /* Reduce font size */
+    }
+  
+    .notes div button {
+      width: 60%; /* Adjust width */
+      font-size: 10px; /* Reduce font size */
+    }
+  }
+  
