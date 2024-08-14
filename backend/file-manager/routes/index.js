@@ -18,13 +18,14 @@ router.get('/', (req, res) => {
 })
 router.post('/update-file/:id', Product.updateProduct)
 router.get('/products', Product.getFiles);
-router.get('/owner/:id', Product.isOwner);
+router.get('/owner/:id', Helper.authAdmin, Product.isOwner);
 router.delete('/delete-product/:id', Product.deleteProduct);
 
 router.get('/status', AppController.getStatus);
 router.get('/stats', AppController.getStats);
 router.post('/users', UsersController.postNew);
 router.get('/users', UsersController.getAll);
+router.post('/update-user', UsersController.updateUser); 
 router.delete('/users', UsersController.delUser);
 router.delete('/delete-image/:id/:index', Product.deleteImage);
 router.post('/additional-image/:id', Product.AddAdditionalImage)

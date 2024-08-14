@@ -13,8 +13,6 @@ import redisClient from '../utils/redis';
 
 class Product {
 
-    
-
     static async getFiles(req, res) {      
         try {
           // Access query parameter 'name'
@@ -59,10 +57,7 @@ class Product {
               }
             }
             
-            return res.status(200).json(allFiles);
-            
-      
-            return res.status(200).json(allFiles);
+            return res.status(200).json(allFiles);            
           }
         } catch (error) {
           console.error('Error fetching files:', error);
@@ -74,7 +69,7 @@ class Product {
         try{
           const product = await Product.findProduct(req);
           if (product)
-            res.status(200).json({owner:item ? true : false});
+            res.status(200).json({owner:true});
           else {
             res.status(200).json({owner:false});
           }
@@ -83,9 +78,8 @@ class Product {
         }
       }
 
-       static async findProduct(req){
+      static async findProduct(req){
         const token = req.headers['x-token'];
-        console.log({token})
         const itemId = req.params.id;
         const key = `auth_${token}`;
         const userId = await redisClient.get(key);

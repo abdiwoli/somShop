@@ -71,6 +71,14 @@ class Helper {
         }     
     }
 
+    static async authAdmin(req, res, next) {
+      const data = await Helper.getByToken(req, res);
+      if (data && data.user && data.user.admin){
+        return res.status(200).json({owner:true});
+      }
+
+      next();
+    }
 }
 
 export default Helper;
