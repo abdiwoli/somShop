@@ -26,14 +26,19 @@ class UsersController {
         res.status(400).json({ error: 'Already exist' });
       } else {
           const inserted = await dbClient.addUsers(email, shaiPS, name);
-          
-          userQueue.add({ userId: inserted });
+          const user = await dbClinet.getUsersById(inserted);
+          if (user)
+              user.subject = "wellcome to SOM";
+              userQueue.add({user});
         res.status(201).json({ id: inserted, email });
       }
     }
   }
 
   static async delUser(req, res) {
+    if (!req.user && (req.user && !req.user.admin)){
+      return res.status(401).json({error:'unauthorized'});
+    }
     const { email } = req.body;
     if (email) {
       const deleted = await dbClient.deleteUsers(email);
@@ -50,20 +55,29 @@ class UsersController {
       res.status(200).json({ id: user._id.toString(), email: user.email, admin:user.admin, image:user.image, name:user.name});
   }
 
-static async getAll(req, res) {
-  const collection = await dbClient.client.db().collection('users');
-  const users = await collection.find({}).toArray();
-  res.status(200).json(users);
-}
+  static async getAll(req, res) {
+    if (!req.user && (req.user && !req.user.admin)){
+      return res.status(401).json({error:'unauthorized'});
+    }
+    const collection = await dbClient.client.db().collection('users');
+    const users = await collection.find({}).toArray();
+    res.status(200).json(users);
+  }
 
 static async updateUser(req, res) {
+  if (!req.user && (req.user && !req.user.admin)){
+    return res.status(401).json({error:'unauthorized'});
+  }
   try {
     // Extract userId and other fields from the request body
     const { userId, name, email, password, admin, image, mimeType} = req.body;
     // Validate the userId
+    console.log(userId);
+
     if (!ObjectId.isValid(userId)) {
       return res.status(400).json({ error: 'Invalid userId' });
     }
+
     // Connect to the MongoDB collection
     const collection = await dbClient.client.db().collection('users');
 
@@ -102,8 +116,6 @@ static async updateUser(req, res) {
       { _id: new ObjectId(userId) },
       { $set: payload }
     );
-
-    // Respond with success
     return res.status(200).json({ message: 'User updated successfully' });
 
   } catch (error) {
@@ -112,8 +124,22 @@ static async updateUser(req, res) {
   }
 }
 
-
-  
+static async BlockUser(req, res) {
+  if (!req.user && (req.user && !req.user.admin)){
+    console.log({user:req.user});
+    return res.status(401).json({error:'unauthorized'});
+  }
+  try {
+    const collection = await dbClient.client.db().collection('users');
+    const userId = req.params.id;
+    const block = req.params.block === 'true' ? true : false;
+    await collection.updateOne({_id: new ObjectId(userId)}, {$set:{block}});
+    console.log({userId, block })
+    res.status(200).json({status:"updated"})
+  } catch (err) {
+    res.status(500).json({error:err.message});
+  }
+}
 }
 
 export default UsersController;

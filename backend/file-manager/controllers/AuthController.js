@@ -19,7 +19,7 @@ class AuthController {
 
     if (email && password) {
       const exist = await dbClient.getUsers(email);
-        if (exist) {
+        if (exist && !exist.block) {
             const shaiPS = SHA1(password);
             if (shaiPS === exist.password){
                 const token = v4();

@@ -76,9 +76,21 @@ class Helper {
       if (data && data.user && data.user.admin){
         return res.status(200).json({owner:true});
       }
-
       next();
     }
+
+    static async Subscribe(req, res){
+      const email = req.params.email;
+      try{
+        const collection = await dbClient.client.db().collection('subscribe');
+        await collection.insertOne({email});
+      } catch (err) {
+        console.log(err);
+      }
+      res.status(200).json({status:'done'});
+
+    }
+
 }
 
 export default Helper;

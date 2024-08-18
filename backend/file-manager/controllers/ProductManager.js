@@ -15,31 +15,25 @@ class Product {
 
     static async getFiles(req, res) {      
         try {
-          // Access query parameter 'name'
           const categoryName = req.query.name;
       
           if (categoryName) {
-            // Fetch files from the specified collection
             const collection = await dbClient.client.db().collection(categoryName);
             const files = await collection.find({}).toArray();
             return res.status(200).json(files);
           } else {
-            // Fetch all collection names
             const collections = await dbClient.client.db().listCollections().toArray();
             let allFiles = [];
-      
-            // Fetch files from each collection
+
             for (const collection of collections) {
               if (collection.name ==='files') {
                 const col = await dbClient.client.db().collection(collection.name);
                 const files = await col.find({}).toArray();
-            
                 // Modify each file in the collection
                 const modifiedFiles = files.map(file => {
                   // Replace `_id` with `id`
                   file.id = file._id;
                   delete file._id;
-            
                   // Normalize `localPath`
                   if (file.localPath) {
                     file.localPath = file.localPath.replace(/\\/g, '/');
@@ -48,15 +42,14 @@ class Product {
                       file.images = [file.image, file.image, file.image];
                     }
                   }
-            
+
                   return file;
-                });
-            
+                });            
                 // Concatenate the modified files
                 allFiles = allFiles.concat(modifiedFiles);
               }
             }
-            
+
             return res.status(200).json(allFiles);            
           }
         } catch (error) {
@@ -89,15 +82,23 @@ class Product {
       }
 
       static async deleteProduct(req, res){
-        const item = Product.findProduct(req);       
+        const item = await Product.findProduct(req);
         if (item)
         {
+          if (!req.user && (req.user && !req.user.admin) && req.user._id !== item.userId){
+            return res.status(401).json({error:'unauthorized'});
+          }
           const collection = await dbClient.client.db().collection('files');
-          try{await collection.deleteOne({ _id: new ObjectId(item._id), userId: userId});}
-          catch{return res.status(400).json({status:"not deleted"});}
-          return res.status(200).json({status:"deleted"})
+          try{
+            const result = await collection.deleteOne({ _id: new ObjectId(item._id)});
+            return res.status(200).json({status:result});
+          }
+          catch (err){
+            console.log(err);
+            return res.status(400).json({status:"not deleted"});
+          }
         }
-        res.status(400).json({status:"not deleted"});
+        res.status(404).json({status:"not deleted"});
 
       }
 
@@ -124,7 +125,10 @@ class Product {
           fs.mkdirSync(FOLDER_PATH, { recursive: true });
         }
       
-        let file = await Product.findProduct(req); 
+        let file = await Product.findProduct(req);
+        if (!req.user && (req.user && !req.user.admin) && req.user._id !== file.userId){
+          return res.status(401).json({error:'unauthorized'});
+        }
         let filePath;
         let fileId;
       
@@ -179,14 +183,14 @@ class Product {
       
             return res.status(200).json(editedFile);
           }
-      
+
           return res.status(404).json({ error: 'Update failed' });
         } catch (error) {
           console.error(error);
           return res.status(500).json({ error: 'An error occurred while updating the product' });
         }
       }
-      
+
       static async deleteImage(req, res) {
         const itemId = req.params.id;
         const index = parseInt(req.params.index, 10);
@@ -196,6 +200,9 @@ class Product {
           const product = await Product.findProduct(req); 
           if (!product) {
             return res.status(404).json({ error: 'Product not found' });
+          }
+          if (!req.user && (req.user && !req.user.admin) && req.user._id !== product.userId){
+            return res.status(401).json({error:'unauthorized'});
           }
           const images = product.images || [];
           if (index > -1 && index < images.length) {
@@ -227,7 +234,9 @@ class Product {
             const itemId = req.params.id;
             const collection = await dbClient.client.db().collection('files');
             const product = await Product.findProduct(req); 
-            console.log(req.params.id)
+            if (!req.user && (req.user && !req.user.admin) && req.user._id !== product.userId){
+              return res.status(401).json({error:'unauthorized'});
+            }
     
             if (product && data) {
                 const fileData = Buffer.from(data, 'base64');
@@ -249,6 +258,52 @@ class Product {
             return res.status(500).json({ status: "error", message: error.message });
         }
     }
+
+    static async Latets(req, res){
+      const collection = await dbClient.client.db().collection('files');
+      const files = await collection.find({}).sort({ _id: -1 }).limit(4).toArray();
+      const latest = files.map(file=>{
+        file.localPath = file.localPath.replace(/\\/g, '/');
+        file.image = file.localPath.split('/').pop();
+        return file;
+      })
+      console.log(latest);
+      return res.status(200).json(latest);
+
+    }
+
+    static async Trending(req, res) {
+      try {
+        const collection = await dbClient.client.db().collection('files');
+        
+        // Use the aggregation pipeline to group by category and pick the first file in each group
+        const files = await collection.aggregate([
+          {
+            $group: {
+              _id: '$catagory', 
+              file: { $last: '$$ROOT' } 
+            }
+          },
+          {
+            $replaceRoot: { newRoot: '$file' } 
+          }
+        ]).toArray();
+
+        const trending = files.map(file=> {
+          file.localPath = file.localPath.replace(/\\/g, '/');
+          file.image = file.localPath.split('/').pop();
+          return file;
+        })
+
+
+    
+        res.json(trending);
+      } catch (error) {
+        console.error('Error fetching trending files:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    }
+    
     
     
 }

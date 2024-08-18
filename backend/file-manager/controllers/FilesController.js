@@ -8,6 +8,8 @@ import Queue from 'bull';
 import Helper from './utils';
 import dbClient from '../utils/db';
 
+const newProduct = new Queue('newProduct');
+
 class FilesController {
   static async postUpload(req, res) {
     const users = await Helper.getByToken(req, res);
@@ -30,8 +32,6 @@ class FilesController {
           catagory,
           description
       } = req.body;
-
-     
       
       
 
@@ -69,11 +69,9 @@ class FilesController {
             let filePath;
             
             if (type === 'image') {
-                // Determine file extension from MIME type
                 const ext = mimeType.split('/')[1];
                 filePath = path.join(FOLDER_PATH, `${fileId}.${ext}`);
             } else {
-                // Use default extension for non-image files
                 filePath = path.join(FOLDER_PATH, fileId);
             }
             
@@ -96,10 +94,9 @@ class FilesController {
             if (result.insertedId) {
                 const newFile = await files.findOne({ _id: result.insertedId });
                 const editedFile = Helper.fileToReturn(newFile);
-                if (editedFile.type === 'image') {
-                    const fileQueue = new Queue('fileQueue');
-                    fileQueue.add({ userId: editedFile.userId, fileId: editedFile.id });
-                }
+                const email = await dbClient.client.db().collection('subscribe').find({}).toArray();
+                const emails = email.filter(el=>el.email).map(el => el.email);
+                newProduct.add({product:newFile, emails});
                 return res.status(201).json(editedFile);
             }
 
@@ -231,7 +228,6 @@ class FilesController {
         return res.status(404).json({ message: "No collections found in the database." });
       }
 
-      // Sequentially drop each collection except 'users'
       for (const collection of collections) {
         if (collection.collectionName !== 'users') {
           await collection.drop();
