@@ -1,13 +1,19 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../UserProvider/UserProvider';
+import { getImage } from '../Utils/imageLoader';
+import './Account.css';
+import UpdateUser from '../UploadProduct/UpdateUser';
 
 const Account = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [showUplaod, setShowUplaod] = useState(false);
 
-  // Extract userToken from context
   const { userToken } = useContext(UserContext);
+
+  const handleImage = () => {
+    setShowUplaod(prev => !prev);
+  }
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -19,21 +25,18 @@ const Account = () => {
           },
         });
 
-        // Check if the response is OK (status in the range 200-299)
         if (!response.ok) {
-          if (response.status===401){
+          if (response.status === 401) {
             localStorage.removeItem('userToken');
-         
           }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        // Parse the JSON response
         const data = await response.json();
         setUser(data);
       } catch (err) {
-        window.location.href = '/login'
-        setError('An error occurred while fetching user details.');
+        window.location.href = '/login';
+        console.log({err});
       } finally {
         setLoading(false);
       }
@@ -42,33 +45,46 @@ const Account = () => {
     fetchUserDetails();
   }, [userToken]);
 
- 
-
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className='account'>
+      {showUplaod && <UpdateUser user={user}/>}
       <div className='profile-image'>
-        <img
-          src='https://via.placeholder.com/150'
-          alt='Profile Placeholder'
-          style={{ borderRadius: '50%' }}
-        />
+      { user && (user.image ? (
+        <img src={getImage(user?.image)} alt='Profile' onClick={() => handleImage()}/> ) : (
+        <button onClick={() => handleImage()}>Upload new image</button>))
+        }
       </div>
       <div className='user-details'>
         {user ? (
           <div>
-            <h1>{user.name}</h1>
-            <p>Email: {user.email}</p>
-            <p>ID: {user.id}</p>
+            <h1>{user.name || 'No Name Available'}</h1>
+            <p>Email: {user.email || 'No Email Available'}</p>
+            <p>ID: {user.id || 'No ID Available'}</p>
           </div>
         ) : (
           <p>No user details available.</p>
         )}
       </div>
+      <div className='account-buttons'>
+        {user && user.admin && (
+          <div>
+            <div className='account-buttons'>
+            <button onClick={() => window.location.href = '/users'}>Manage Users</button>
+          </div>
+          <div className='account-buttons'>
+            <button onClick={() => window.location.href = '/messages'}>Messages</button>
+          </div>
+        </div>
+          
+        )}
+        <div className='account-buttons'>
+            <button onClick={() => window.location.href = '/all'}>Manage Products</button>
+          </div>
+      </div>
+      
     </div>
-    
   );
 };
 

@@ -1,0 +1,47 @@
+.privacy-policy-section {
+    padding: 60px 20px;
+    background-color: #ffffff;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .privacy-policy-title {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #007BFF;
+  }
+  
+  .policy-description {
+    font-size: 1.125rem;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  .policy-subtitle {
+    font-size: 1.5rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #007BFF;
+  }
+  
+  .policy-text {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #555;
+  }
+  
+  .policy-text a {
+    color: #007BFF;
+    text-decoration: none;
+  }
+  
+  .policy-text a:hover {
+    text-decoration: underline;
+  }
+  

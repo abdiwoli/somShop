@@ -4,6 +4,7 @@ import { CatProvider } from '../../Providers/CatProvider';
 import {getImage} from '../Utils/imageLoader'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import fetchOwner from './FetchOwner';
 
 
 export const ViewItem = (props) => {
@@ -34,19 +35,7 @@ export const ViewItem = (props) => {
     }, [item.id, token])
 
     useEffect(()=>{
-        const fetchOwner = async () => {
-            try{
-                const response = await axios.get(`http://localhost:5000/owner/${item.id}`, {
-                    headers: {
-                        'x-token': token
-                    }
-                });
-                setOwner(response.data.owner);
-            } catch {
-                setOwner(false);
-            }
-        }
-        fetchOwner();
+        fetchOwner(setOwner, item.id, token);
     }, [item.id, token])
 
 
@@ -60,15 +49,11 @@ export const ViewItem = (props) => {
     };
     const handle_delete = () => {
         deleteProduct(item.id, token);
-        navigate('/items')
+        navigate(`/${item.catagory}`);
     }
-
-    
-
     if (!item || !Array.isArray(item.images)) {
         return <div>Item or images data is not available.</div>;
     }
-
     return (
         <div className='view'>
             <div className="view-left">
@@ -136,7 +121,7 @@ export const ViewItem = (props) => {
                     Add to Cart
                 </button>
                 {owner && <button className="delte-product" onClick={handle_delete}>
-                    Deletw Product
+                    Delete Product
                 </button>  }
             </div>
         </div>

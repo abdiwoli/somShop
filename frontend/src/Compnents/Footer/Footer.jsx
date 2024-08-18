@@ -16,21 +16,21 @@ const Footer = () => {
         <hr />
       <div className='footer-content'>
         <ul className='footer-links'>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li><a href="#privacy">Privacy Policy</a></li>
-          <li><a href="#terms">Terms of Service</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
         </ul>
       </div>
       <div className="social_icons">
         <div className='icons'>
-          <img src={face_icon} alt="Facebook" />
+        <a href="https://www.facebook.com/abdiwolih"><img src={face_icon} alt="Facebook" /></a>
         </div>
         <div className='icons'>
-          <img src={whats_icon} alt="WhatsApp" />
+        <a href="https://wa.me/+97455675949"><img src={whats_icon} alt="WhatsApp" /></a>
         </div>
         <div className='icons'>
-          <img src={LinkedIn_icon} alt="LinkedIn" />
+          <a href="https://www.linkedin.com/in/abdiwoli/"><img src={LinkedIn_icon} alt="LinkedIn" /></a>
         </div>
       </div>
       <div className="copyright">

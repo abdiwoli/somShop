@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useContext } from 'react';
+import { UserContext } from '../UserProvider/UserProvider';
 
-const ImageUpload = ({ productId }) => {
+const ImageUpload = ({ id }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
+  const {userToken} = useContext(UserContext);
   const [success, setSuccess] = useState(false);
 
   // Handle file selection
@@ -35,13 +38,19 @@ const ImageUpload = ({ productId }) => {
     setSuccess(false);
 
     try {
+      console.log(userToken);
       const base64String = await convertToBase64(selectedFile);
       const mimeType = selectedFile.type;
-      
-      await axios.post(`http://localhost:5000/additional-image/${productId}`, {
-        mimeType: mimeType,
-        data: base64String.split(',')[1],
-      });
+
+      await axios.post(
+        `http://localhost:5000/additional-image/${id}`,
+        {
+          mimeType: mimeType,
+          data: base64String.split(',')[1],
+        }, {
+        headers:{'x-token': userToken}
+        }
+      );
 
       setSuccess(true);
       window.location.href = '/all';

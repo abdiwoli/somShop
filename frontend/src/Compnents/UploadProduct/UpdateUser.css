@@ -1,0 +1,136 @@
+/* Container for all users */
+.users-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Individual user card */
+.user-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+}
+
+/* Image styling */
+.user-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+/* User details list */
+.user-details {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 15px;
+    text-align: left;
+}
+
+.user-details li {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* Strong text for labels */
+.user-details li strong {
+    color: #333;
+}
+
+/* Edit button styling */
+.edit-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.edit-button:hover {
+    background-color: #0056b3;
+}
+
+/* Success and error messages */
+.success {
+    color: #28a745;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.error {
+    color: #dc3545;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Form group styling in UpdateUser component */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group input[type="file"] {
+    font-size: 14px;
+}
+
+
+.image-preview {
+    margin-top: 10px;
+    max-width: 150px !important;
+    height: auto;
+    border-radius: 4px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* Button styling for the form */
+button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+button[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}

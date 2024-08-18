@@ -1,11 +1,18 @@
-import React from 'react'
-import {getProducts} from '../Images/products';
+import React, { useEffect, useState } from 'react'
 import Element from '../Elements/Element';
 import {getImage} from '../Utils/imageLoader'
 import './Trend.css'
-const products = await getProducts();
+import newProducts from '../NewProducts/newItems';
 
-const Trend = (props) => {
+const Trend = () => {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    const fetchItems = async () => {
+      const result = await newProducts('trending')
+      setProducts(result);
+    }
+    fetchItems();
+  }, []);
   return (
     <div className='products'>
       

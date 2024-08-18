@@ -29,8 +29,11 @@ const Hook = () => {
           <p className="limited-time">Limited Time</p>
           <p className="deals">Deals</p>
         </div>
-        <div className="offer-btn">
-          <div>Shop Now</div>
+        <div className="offer-btn" onClick={() =>{ window.location.href='/products'}}>
+        <div  style={{ cursor: 'pointer' }}>
+  Shop Now
+</div>
+
         </div>
       </div>
       <div className="right">

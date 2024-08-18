@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './NewProduct.css';
-import {getProducts} from '../Images/products';
 import Element from '../Elements/Element';
 import {getImage} from '../Utils/imageLoader'
+import newProducts from './newItems';
 
-const products = await getProducts();
 
 const NewProducts = () => {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    const fetchItems = async () => {
+      const result = await newProducts('latest')
+      setProducts(result);
+    }
+    fetchItems();
+  }, []);
   return (
     <div className='products'>
         <h1>New Products</h1>

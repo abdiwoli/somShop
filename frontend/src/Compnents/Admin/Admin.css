@@ -1,11 +1,11 @@
-/* Admin.css */
-
 /* General container styling */
 .admin-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 20px;
+  font-family: poppins;
+  font-weight: 600;
 }
 
 .product-item {
@@ -42,16 +42,40 @@
 .edit-button {
   padding: 10px 20px;
   background-color: #007bff;
-  width: 20%;
+  width: 100px; 
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  grid-column: span 2;
   margin-top: 10px;
 }
 
 .edit-button:hover {
+  background-color: #0056b3;
+}
+
+/* Styling for the "Upload" button container */
+.upload-button {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  flex-direction: column; 
+  gap: 10px; 
+}
+
+.upload-button button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  width: 10%;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-family: poppins;
+  font-weight: 600;
+}
+
+.upload-button button:hover {
   background-color: #0056b3;
 }
 
@@ -65,7 +89,6 @@
   border: none;
   cursor: pointer;
   font-size: 14px;
-  grid-column: span 2;
   margin-top: 10px;
 }
 

@@ -1,21 +1,45 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { CatProvider } from '../../Providers/CatProvider';
 import { getImage } from '../Utils/imageLoader';
+import UploadProduct from '../../Compnents/UploadProduct/UploadProduct'
 import './Admin.css';
 import axios from 'axios';
 import UpdateProduct from '../UploadProduct/UpdateProduct';
 import ImageUpload from '../ImageUpload/ImageUpload';
+import { UserContext } from '../UserProvider/UserProvider';
+import checkAdmin from '../UserProvider/CheckAdmin';
 
 const Admin = () => {
-  const { products } = useContext(CatProvider);
+  let { products } = useContext(CatProvider);
+  const { userToken } = useContext(UserContext);
   const [activeProduct, setActiveProduct] = useState(null);
   const [err, setErr] = useState('');
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(null);
+  const [user, setUser] = useState(null);
+  const [showUplaod, setshowUplaod] = useState(false);
 
+  useEffect(() => {
+    checkAdmin(setIsAdmin, userToken, setUser);
+  }, [userToken], setUser);
+
+  if (isAdmin === null) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAdmin && user) {
+    products = products.filter(item => item.userId===user.id);
+  } else if (!isAdmin && !user) {
+    window.location.href='/login';
+  }
+
+  const handleUpload = () => {setshowUplaod(prevShowUpload => !prevShowUpload);}
   const handleDelete = (indx, id) => {
     const deletePic = async (indx, id) => {
       try {
-        const response = await axios.delete(`http://localhost:5000/delete-image/${id}/${indx}`);
+        const response = await axios.delete(`http://localhost:5000/delete-image/${id}/${indx}`, {
+          headers:{'X-Token': userToken}
+        });
         if (response.error) {
           setErr(response.error);
         } else {
@@ -58,7 +82,7 @@ const Admin = () => {
                 <button className="remove-thumbnail" onClick={() => handleDelete(index, product.id)}>Delete</button>
               </div>
             ))}
-            {showImageUpload && <ImageUpload productId={product.id} />}
+            {showImageUpload && <ImageUpload id={product.id} />}
             <button className="add-image-button" onClick={handleAddImageClick}>
               {showImageUpload ? 'Cancel Upload' : 'Add New Image'}
             </button>   
@@ -77,7 +101,11 @@ const Admin = () => {
           )}
         </div>
       ))}
-    </div>
+      <div className='upload-button'>
+        <button onClick={()=>handleUpload()}>Add new Products</button>
+        {showUplaod && (<UploadProduct />)}
+      </div>
+    </div>  
   );
 };
 

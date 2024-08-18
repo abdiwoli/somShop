@@ -8,7 +8,7 @@ const UploadProduct = () => {
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
   const [prevPrice, setPrevPrice] = useState('');
-  const [description, setDescription] = useState(''); // New state for description
+  const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [mimeType, setMimeType] = useState('');
   const [imagePreview, setImagePreview] = useState('');
@@ -154,7 +154,7 @@ const UploadProduct = () => {
           {imagePreview && (
             <img
               src={imagePreview}
-              alt='Image Preview'
+              alt=''
               className='image-preview'
             />
           )}

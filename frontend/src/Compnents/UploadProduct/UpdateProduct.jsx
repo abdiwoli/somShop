@@ -35,22 +35,7 @@ const UpdateProduct = ({ product }) => {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  const convertImageToBase64 = (imagePath) => {
-    return new Promise((resolve, reject) => {
-      fetch(imagePath)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const base64data = reader.result.split(',')[1];
-            resolve(base64data);
-          };
-          reader.onerror = (error) => reject(error);
-          reader.readAsDataURL(blob);
-        })
-        .catch((error) => reject(error));
-    });
-  };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -204,7 +189,7 @@ const UpdateProduct = ({ product }) => {
           {imagePreview || product.image ? (
             <img
               src={imagePreview || getImage(product.image)}
-              alt='Image Preview'
+              alt=''
               className='image-preview'
             />
           ) : null}

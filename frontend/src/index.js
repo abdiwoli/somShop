@@ -5,13 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import CatContextProvider from './Providers/CatProvider';
 import { UserProvider } from './Compnents/UserProvider/UserProvider';
+import { MessageProvider } from './Compnents/Admin/FetchMessage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <UserProvider>
     <CatContextProvider>
-    <App />
+    <MessageProvider><App /></MessageProvider>
     </CatContextProvider>
     </UserProvider>
   </React.StrictMode>

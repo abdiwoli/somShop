@@ -12,9 +12,7 @@ const Categories = (props) => {
         <p>
           <span>showing all products</span>
         </p>
-        <div className='sort'>
-          Sort by <button>down</button>
-        </div>
+        
       </div>
       <div className='item-products'>
         {products.map((el, idx) => {
@@ -25,9 +23,7 @@ const Categories = (props) => {
           }
         })}
       </div>
-      <div className='more'>
-        See more products
-      </div>
+     
     </div>
   )
 }
