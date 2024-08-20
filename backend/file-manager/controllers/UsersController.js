@@ -26,7 +26,7 @@ class UsersController {
         res.status(400).json({ error: 'Already exist' });
       } else {
           const inserted = await dbClient.addUsers(email, shaiPS, name);
-          const user = await dbClinet.getUsersById(inserted);
+          const user = await dbClient.getUsersById(inserted);
           if (user)
               user.subject = "wellcome to SOM";
               userQueue.add({user});
@@ -93,7 +93,7 @@ static async updateUser(req, res) {
 
     // Process the image if provided
     if (image) {
-      const folderPath = process.env.FOLDER_PATH || '../../../frontend/src/uploads';
+      const folderPath = process.env.FOLDER_PATH || '../uploads';
       const FOLDER_PATH = path.resolve(__dirname, folderPath);
       fileId = uuidv4();
       ext = mimeType.split('/')[1];

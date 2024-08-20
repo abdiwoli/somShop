@@ -13,7 +13,8 @@ import redisClient from '../utils/redis';
 
 class Product {
 
-    static async getFiles(req, res) {      
+    static async getFiles(req, res) {
+        console.log("I am called ");
         try {
           const categoryName = req.query.name;
       
@@ -45,8 +46,8 @@ class Product {
 
                   return file;
                 });            
-                // Concatenate the modified files
-                allFiles = allFiles.concat(modifiedFiles);
+                  // Concatenate the modified files
+                  allFiles = allFiles.concat(modifiedFiles);
               }
             }
 

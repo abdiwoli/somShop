@@ -58,7 +58,7 @@ router.get('/complete-order', async (req, res) => {
 });
 
 router.get('/cancel-order', (req, res) => {
-  res.redirect('http://localhost:3000');
+  res.redirect('http://localhost');
 });
 
 router.post('/pay', async (req, res) => {
