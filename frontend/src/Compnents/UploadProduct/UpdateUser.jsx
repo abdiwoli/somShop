@@ -3,6 +3,7 @@ import { UserContext } from '../UserProvider/UserProvider';
 import { getImage } from '../Utils/imageLoader';
 import './UpdateUser.css'
 
+
 const UpdateUser = ({ user }) => {
   const { userToken } = useContext(UserContext);
   const [name, setName] = useState('');
@@ -75,7 +76,7 @@ const UpdateUser = ({ user }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/update-user', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/update-user`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',

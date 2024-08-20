@@ -3,6 +3,7 @@ import { CatProvider } from '../../Providers/CatProvider';
 import './Checkout.css'; 
 import { UserContext } from '../UserProvider/UserProvider';
 
+
 const Checkout = () => {
   const { getCartProducts } = useContext(CatProvider);
   const { userToken } = useContext(UserContext);
@@ -14,7 +15,7 @@ const Checkout = () => {
     <div className="checkout-container">
       <form 
         className="checkout-form" 
-        action="http://localhost:5000/pay" 
+          action={`${process.env.REACT_APP_BACKEND_API}/pay`} 
         method="post"
       >
         <input type="hidden" name="orders" value={serializedOrders} />

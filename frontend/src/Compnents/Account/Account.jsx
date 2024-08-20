@@ -4,6 +4,7 @@ import { getImage } from '../Utils/imageLoader';
 import './Account.css';
 import UpdateUser from '../UploadProduct/UpdateUser';
 
+
 const Account = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,7 @@ const Account = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await fetch('http://localhost:5000/users/me', {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/users/me`, {
           method: 'GET',
           headers: {
             'X-Token': userToken,

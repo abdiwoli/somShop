@@ -37,7 +37,7 @@ function App() {
         <Routes>
           <Route path='/' element={<MainPage kind='main' />} />
           <Route path='/products' element={<AllProducts />} />
-          <Route path='/messages' element={<Messages/>} />
+          <Route path='/messages' element={<Messages />} />
           <Route path='/contact' element={<ContactUs />} />
           <Route path='/terms' element={<TermsOfService />} />
           <Route path='/privacy' element={<PrivacyPolicy />} />

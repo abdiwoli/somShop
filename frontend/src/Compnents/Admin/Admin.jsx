@@ -9,6 +9,7 @@ import ImageUpload from '../ImageUpload/ImageUpload';
 import { UserContext } from '../UserProvider/UserProvider';
 import checkAdmin from '../UserProvider/CheckAdmin';
 
+
 const Admin = () => {
   let { products } = useContext(CatProvider);
   const { userToken } = useContext(UserContext);
@@ -37,7 +38,7 @@ const Admin = () => {
   const handleDelete = (indx, id) => {
     const deletePic = async (indx, id) => {
       try {
-        const response = await axios.delete(`http://localhost:5000/delete-image/${id}/${indx}`, {
+        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_API}/delete-image/${id}/${indx}`, {
           headers:{'X-Token': userToken}
         });
         if (response.error) {

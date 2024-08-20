@@ -1,0 +1,4 @@
+CHOKIDAR_USEPOLLING=true
+CHOKIDAR_INTERVAL=1000
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_API}/${route}`);
+API=api

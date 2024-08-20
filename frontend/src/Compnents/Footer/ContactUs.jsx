@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import './ContactUs.css';
 
+
 const ContactUs = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
 
     const formData = new FormData(e.target);
 
     try {
-      await fetch('http://localhost:5000/message', {
+      await fetch(`${process.env.REACT_APP_BACKEND_API}/message`, {
         method: 'POST',
         body: formData,
       });

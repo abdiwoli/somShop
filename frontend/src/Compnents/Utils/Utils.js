@@ -1,7 +1,7 @@
 // Example of handling errors in createUser
 export const createUser = async (name, email, password) => {
     try {
-      const response = await fetch('http://localhost:5000/users', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export const createUser = async (name, email, password) => {
     console.log(`Logging in with credentials: ${credentials}`);
   
     try {
-      const response = await fetch('http://localhost:5000/connect', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/connect`, {
         method: 'GET',
         headers: {
           'Authorization': `Basic ${credentials}`,

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../UserProvider/UserProvider';
 
+
 const ImageUpload = ({ id }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -43,7 +44,7 @@ const ImageUpload = ({ id }) => {
       const mimeType = selectedFile.type;
 
       await axios.post(
-        `http://localhost:5000/additional-image/${id}`,
+        `${process.env.REACT_APP_BACKEND_API}/additional-image/${id}`,
         {
           mimeType: mimeType,
           data: base64String.split(',')[1],

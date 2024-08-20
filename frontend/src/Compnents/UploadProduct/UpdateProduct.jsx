@@ -3,6 +3,7 @@ import './UploadProduct.css';
 import { UserContext } from '../UserProvider/UserProvider';
 import { getImage } from '../Utils/imageLoader';
 
+
 const UpdateProduct = ({ product }) => {
   const { userToken } = useContext(UserContext);
   const [name, setName] = useState('');
@@ -91,7 +92,7 @@ const UpdateProduct = ({ product }) => {
     };
 
     try {
-      const response = await fetch(`http://localhost:5000/update-file/${product.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/update-file/${product.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

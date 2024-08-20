@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import './UploadProduct.css';
 import { UserContext } from '../UserProvider/UserProvider';
 
+
 const UploadProduct = () => {
   const { userToken } = useContext(UserContext);
   const [name, setName] = useState('');
@@ -55,7 +56,7 @@ const UploadProduct = () => {
       };
 
       try {
-        const response = await fetch('http://localhost:5000/files', {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/files`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

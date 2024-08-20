@@ -118,7 +118,7 @@ class Product {
       
         const { id: productId } = req.params;
         const files = await dbClient.client.db().collection('files');
-        const folderPath = process.env.FOLDER_PATH || '../../../frontend/src/uploads';
+        const folderPath = process.env.FOLDER_PATH || '../uploads';
         const FOLDER_PATH = path.resolve(__dirname, folderPath);
       
         if (!fs.existsSync(FOLDER_PATH)) {
@@ -223,7 +223,7 @@ class Product {
       }
 
       static async AddAdditionalImage(req, res) {
-        const { folderPath = '../../../frontend/src/uploads' } = process.env;
+        const { folderPath = '../uploads' } = process.env;
         const FOLDER_PATH = path.resolve(__dirname, folderPath);
         const { mimeType, data } = req.body;
         const fileId = uuidv4();

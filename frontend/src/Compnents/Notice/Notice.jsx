@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import './Notice.css'
 import axios from 'axios';
+
+
+
 const Notice = () => {
 
   const [email, setEmail] = useState('');
@@ -12,7 +15,7 @@ const Notice = () => {
 
   const handleSubscribe = async (email) => {
     try{
-      await axios.post(`http://localhost:5000/subscribe/${email}`);
+      await axios.post(`${process.env.REACT_APP_BACKEND_API}/subscribe/${email}`);
       setMessage('subsbcribed')
     }
     catch(err){console.log(err)};

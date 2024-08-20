@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { CatProvider } from '../../Providers/CatProvider';
 import axios from 'axios';
-import  '../Templates/Css/Orders.css'; 
+import  '../Templates/Css/Orders.css';
+
 
 const Orders = () => {
     const [loading, setLoading] = useState(true);
@@ -26,7 +27,7 @@ const Orders = () => {
     useEffect(() => { 
         const ordersFetch = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/orders', {
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/orders`, {
                     headers: {
                         'X-Token': token,
                     },
@@ -44,7 +45,7 @@ const Orders = () => {
 
     const handleCompletePayment = async (orderId) => {
         try {
-            await axios.post(`http://localhost:5000/orders/${orderId}/complete`, {}, {
+            await axios.post(`${process.env.REACT_APP_BACKEND_API}/orders/${orderId}/complete`, {}, {
                 headers: {
                     'X-Token': token,
                 },
@@ -61,7 +62,7 @@ const Orders = () => {
 
     const handleDeleteOrder = async (orderId) => {
         try {
-            await axios.delete(`http://localhost:5000/orders/${orderId}`, {
+            await axios.delete(`${process.env.REACT_APP_BACKEND_API}/orders/${orderId}`, {
                 headers: {
                     'X-Token': token,
                 },

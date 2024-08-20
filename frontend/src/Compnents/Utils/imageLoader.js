@@ -1,16 +1,7 @@
-// getImage.js
-const importAll = (r) => {
-    let images = {};
-    r.keys().forEach((item) => {
-        images[item.replace('./', '')] = r(item);
-    });
-    return images;
-};
+// Define the base URL for the images
+const BASE_URL = 'http://localhost:5000/images/';
 
-
-// Import all images from the `images` directory
-const images = importAll(require.context('../../uploads/', false, /\.(png|jpg|jpeg)$/));
-
+// Function to return the full URL of the image based on the filename
 export const getImage = (filename) => {
-    return images[filename] || null;
+    return `${BASE_URL}${filename}`;
 };

@@ -15,7 +15,7 @@ class FilesController {
     const users = await Helper.getByToken(req, res);
     if (users && users.user) {
         const files = await dbClient.client.db().collection('files');
-        const { folderPath = '../../../frontend/src/uploads' } = process.env;
+        const { folderPath = '../uploads' } = process.env;
         const FOLDER_PATH = path.resolve(__dirname, folderPath);
 
         const { user } = users;
