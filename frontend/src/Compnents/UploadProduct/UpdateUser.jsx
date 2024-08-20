@@ -19,7 +19,6 @@ const UpdateUser = ({ user }) => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    // Initialize form fields with user data
     setName(user.name || '');
     setEmail(user.email || '');
     setPassword(user.password || '');
@@ -28,7 +27,7 @@ const UpdateUser = ({ user }) => {
     setImagePreview(user.image ? getImage(user.image) : '');
     setUserId(user.id || '');
   }, [user]);
-
+    console.log({password:user.password});
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
@@ -36,7 +35,6 @@ const UpdateUser = ({ user }) => {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  console.log({user:user});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,7 +73,8 @@ const UpdateUser = ({ user }) => {
       image: base64data,
     };
 
-    try {
+      try {
+          console.log({status:`${process.env.REACT_APP_BACKEND_API}/update-user`});
       const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/update-user`, {
         method: 'post',
         headers: {

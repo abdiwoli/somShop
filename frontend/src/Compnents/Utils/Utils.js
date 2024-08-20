@@ -14,7 +14,7 @@ export const createUser = async (name, email, password) => {
         return { error: `Error ${response.status}: ${errorText}` };
       }
   
-      const data = await response.json();
+        const data = await response.json();
       return { data };
     } catch (error) {
       return { error: `Network error: ${error.message}` };

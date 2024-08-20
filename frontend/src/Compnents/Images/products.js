@@ -17,13 +17,13 @@ async function fetchProducts() {
         // Store the fetched data in the `products` array
         products = await response.json();
     } catch (error) {
-        console.error('An error occurred while fetching the products:', error);
+        console.log(error.toString());
     }
+
 }
 
 // Immediately fetch the products
 fetchProducts();
-
 export async function getProducts() {
     // Ensure that products are fetched before returning
     if (products.length === 0) {

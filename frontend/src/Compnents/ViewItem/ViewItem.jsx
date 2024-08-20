@@ -20,7 +20,7 @@ export const ViewItem = (props) => {
     useEffect(()=>{
         const fetchOwner = async () => {
             try{
-                const response = await axios.get(`http://localhost:5000/owner/${item.id}`, {
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/owner/${item.id}`, {
                     headers: {
                         'X-Token': token
                     }
@@ -38,6 +38,7 @@ export const ViewItem = (props) => {
         fetchOwner(setOwner, item.id, token);
     }, [item.id, token])
 
+    console.log(item);
 
 
     const handleImageClick = (image) => {
@@ -69,7 +70,7 @@ export const ViewItem = (props) => {
                     ))}
                 </div>
                 <div className="view-image">
-                    <img className='main-img' src={getImage(mainImage)} alt={item.name} />
+                    <img className='main-img' src={getImage(item.image)} alt={item.name} />
                 </div>
             </div>
             <div className="view-right">

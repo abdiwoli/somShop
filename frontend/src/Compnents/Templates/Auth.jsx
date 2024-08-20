@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import './Css/Auth.css';
 import { createUser, loginUser } from '../Utils/Utils';
-import { UserContext } from '../UserProvider/UserProvider'; 
+import { UserContext } from '../UserProvider/UserProvider';
 
 const Auth = () => {
-  const { userToken, updateUserToken } = useContext(UserContext); 
+  const { userToken, updateUserToken } = useContext(UserContext);
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -13,9 +13,17 @@ const Auth = () => {
 
   useEffect(() => {
     if (userToken) {
-      window.location.href = '/profile'; 
+      window.location.href = '/profile';
     }
   }, [userToken]);
+
+  useEffect(() => {
+    console.log('Error state changed:', error);
+  }, [error]);
+
+  useEffect(() => {
+    console.log('isLogin state changed:', isLogin);
+  }, [isLogin]);
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
@@ -23,18 +31,24 @@ const Auth = () => {
   };
 
   const handleSubmit = async () => {
+    console.log('Form submitted');
     if (isLogin) {
+      console.log('Attempting to log in');
       const result = await loginUser(email, password);
+      console.log('Login result:', result);
       if (result.error) {
         setError('Unauthorized');
       } else {
-        updateUserToken(result.data.token); // Set the userToken using context
-        window.location.href = '/home'; // Redirect after successful login
+        updateUserToken(result.data.token);
+        window.location.href = '/home';
       }
     } else {
+      console.log('Attempting to create user');
       const result = await createUser(name, email, password);
+      console.log('Create user result:', result);
       if (!result.error) {
-        setIsLogin(true); // Switch to login mode after successful signup
+        setIsLogin(true);
+        setError("success");
       } else {
         setError(result.error);
       }

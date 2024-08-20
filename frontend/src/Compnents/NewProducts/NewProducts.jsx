@@ -20,7 +20,7 @@ const NewProducts = () => {
         <hr/>
         <div className='products-p'>
         {products.map((el, idx)=>{
-                return <Element image={getImage(el.image)} new_price={el.price} key={idx} id={el.id} name={el.name} old_price={el.prevPrice}  />
+                return <Element image={getImage(el.image)} new_price={el.price} key={idx} id={el._id} name={el.name} old_price={el.prevPrice}  />
             })}
         </div>
     </div>
