@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import { MessagesContext } from './FetchMessage';
 import './Messages.css';
 
-
 const Messages = () => {
     const { messages } = useContext(MessagesContext);
     const [selectedMessage, setSelectedMessage] = useState(null);
@@ -50,7 +49,7 @@ const Messages = () => {
         <div className="messages-container">
             {selectedMessage ? (
                 <div className="message-details">
-                    <button className="close-button" onClick={()=>handleClose}>X</button>
+                    <button className="close-button" onClick={handleClose}>X</button>
                     <div className="message-header">
                         <span className="message-sender">{selectedMessage.name}</span>
                         <span className="message-time">{new Date(selectedMessage.createdAt).toLocaleString()}</span>
@@ -68,7 +67,7 @@ const Messages = () => {
                                 onChange={(e) => setReplyText(e.target.value)}
                                 placeholder="Type your reply here..."
                             />
-                            <button className="send-button" onClick={()=>handleSendReply}>Send</button>
+                            <button className="send-button" onClick={handleSendReply}>Send</button>
                         </div>
                     )}
                 </div>
@@ -84,6 +83,7 @@ const Messages = () => {
                                 <div className="message-title">{message.title}</div>
                                 <button className="reply-button" onClick={(e) => {
                                     e.stopPropagation();
+                                    handleClick(message);
                                     handleReply();
                                 }}>
                                     <i className="fas fa-reply"></i> Reply

@@ -64,8 +64,8 @@ const Admin = () => {
   return (
     <div className="admin-container">
       {products.map((product) => (
-        <div className="product-item" key={product.id}>
-          <div className="product-id">ID: {product.id}</div>
+        <div className="product-item" key={product._id}>
+          <div className="product-id">ID: {product._id}</div>
           <div className="product-name">Name: {product.name}</div>
           <div className="product-category">Category: {product.catagory}</div>
           <div className="product-price">Price: ${product.price}</div>
@@ -80,10 +80,10 @@ const Admin = () => {
                   alt={`Thumbnail ${index + 1}`} 
                   className="thumbnail"
                 />
-                <button className="remove-thumbnail" onClick={() => handleDelete(index, product.id)}>Delete</button>
+                <button className="remove-thumbnail" onClick={() => handleDelete(index, product._id)}>Delete</button>
               </div>
             ))}
-            {showImageUpload && <ImageUpload id={product.id} />}
+            {showImageUpload && <ImageUpload id={product._id} />}
             <button className="add-image-button" onClick={handleAddImageClick}>
               {showImageUpload ? 'Cancel Upload' : 'Add New Image'}
             </button>   
@@ -95,7 +95,7 @@ const Admin = () => {
           >
             Edit
           </button>
-          {activeProduct && activeProduct.id === product.id && (
+          {activeProduct && activeProduct._id === product._id && (
             <div className="additional-component">
               <UpdateProduct product={product} />
             </div>

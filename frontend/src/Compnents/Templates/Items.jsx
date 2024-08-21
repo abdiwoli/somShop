@@ -13,7 +13,7 @@ const Items = () => {
   useEffect(() => {
     // Check if products are available and find the item
     if (products) {
-      const foundItem = products.find((e) => e.id === itemId);
+      const foundItem = products.find((e) => e._id === itemId);
       setItem(foundItem || null);
     }
   }, [products, itemId]);

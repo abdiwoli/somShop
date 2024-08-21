@@ -92,7 +92,7 @@ const UpdateProduct = ({ product }) => {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/update-file/${product.id}`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/update-file/${product._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

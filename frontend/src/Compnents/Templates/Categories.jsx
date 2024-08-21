@@ -17,7 +17,7 @@ const Categories = (props) => {
       <div className='item-products'>
         {products.map((el, idx) => {
           if (props.kind===el.catagory){
-            return <Element image={getImage(el.image)} new_price={el.price} key={idx} id={el.id} name={el.name} old_price={el.prevPrice}  />
+            return <Element image={getImage(el.image)} new_price={el.price} key={idx} id={el._id} name={el.name} old_price={el.prevPrice}  />
           } else {
             return null;
           }

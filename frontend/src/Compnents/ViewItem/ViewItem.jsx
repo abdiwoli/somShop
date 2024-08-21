@@ -20,7 +20,7 @@ export const ViewItem = (props) => {
     useEffect(()=>{
         const fetchOwner = async () => {
             try{
-                const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/owner/${item.id}`, {
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/owner/${item._id}`, {
                     headers: {
                         'X-Token': token
                     }
@@ -32,10 +32,10 @@ export const ViewItem = (props) => {
 
         }
         fetchOwner();
-    }, [item.id, token])
+    }, [item._id, token])
 
     useEffect(()=>{
-        fetchOwner(setOwner, item.id, token);
+        fetchOwner(setOwner, item._id, token);
     }, [item.id, token])
 
     console.log(item);
@@ -46,10 +46,10 @@ export const ViewItem = (props) => {
     };
 
     const handleAddToCart = () => {
-        addItem(item.id, item);
+        addItem(item._id, item);
     };
     const handle_delete = () => {
-        deleteProduct(item.id, token);
+        deleteProduct(item._id, token);
         navigate(`/${item.catagory}`);
     }
     if (!item || !Array.isArray(item.images)) {

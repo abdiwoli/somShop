@@ -7,7 +7,6 @@ export const CatProvider = createContext(null);
 const CatContextProvider = (props) => {
   const [products, setProducts] = useState([]);
   const [BasketElement, setBasketItems] = useState(() => {
-    // Load initial state from localStorage, or use the defaultBasket function
     const savedBasket = localStorage.getItem('basket');
     return savedBasket ? JSON.parse(savedBasket) : {};
   });
@@ -20,7 +19,7 @@ const CatContextProvider = (props) => {
       if (Object.keys(prevBasket).length === 0) {
         let Basket = {};
         for (let product of productsList) {
-          Basket[product.id] = {
+          Basket[product._id] = {
             ...product,
             quantity: 0
           };
@@ -30,7 +29,6 @@ const CatContextProvider = (props) => {
       return prevBasket;
     });
   };
-
 
   useEffect(() => {
     fetchProducts();
@@ -57,7 +55,7 @@ const CatContextProvider = (props) => {
       const updatedBasket = { ...el };
       updatedBasket[id] = updatedBasket[id]
         ? { ...updatedBasket[id], quantity: updatedBasket[id].quantity + 1 }
-        : { ...products.find(product => product.id === id), quantity: 1 };
+        : { ...products.find(product => product._id === id), quantity: 1 };
       return updatedBasket;
     });
   };
@@ -84,10 +82,10 @@ const CatContextProvider = (props) => {
 
   const getCartProducts = () => {
     return products.filter(product => {
-      const quantity = BasketElement[product.id]?.quantity || 0;
+      const quantity = BasketElement[product._id]?.quantity || 0;
       return quantity > 0;
     }).map(product => {
-      const quantity = BasketElement[product.id]?.quantity || 0;
+      const quantity = BasketElement[product._id]?.quantity || 0;
       return {
         ...product,
         quantity,
@@ -98,14 +96,14 @@ const CatContextProvider = (props) => {
 
   const deleteProduct = async (itemId, token) => {
     try {
-      await axios.delete(`http://localhost:5000/delete-product/${itemId}`, {
+      await axios.delete(`${process.env.REACT_APP_BACKEND_API}/delete-product/${itemId}`, {
         headers: {
           'X-Token': token
         }
       });
       // Update the products list locally after deletion
-      setProducts((prevProducts) => prevProducts.filter(product => product.id !== itemId));
-      resetBasket(); // Optionally reset the basket or update it to reflect the deleted product
+      setProducts((prevProducts) => prevProducts.filter(product => product._id !== itemId));
+      resetBasket();
     } catch (error) {
       console.error('Error deleting product:', error);
     }

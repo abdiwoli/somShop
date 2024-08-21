@@ -6,7 +6,7 @@ import Element from '../Elements/Element';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from 'react-icons/ai';
 
 const AllProducts = (props) => {
-  const { products, setProducts } = useContext(CatProvider); // Correct context usage
+  const { products, setProducts } = useContext(CatProvider);
   const [visibleProducts, setVisibleProducts] = useState(8);
   const [sortCriteria, setSortCriteria] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
@@ -30,7 +30,6 @@ const AllProducts = (props) => {
   const handleShowMore = () => {
     setVisibleProducts(prevVisible => {
       const newVisible = prevVisible + 4;
-      // Scroll to the "Show More" button after updating the number of visible products
       if (showMoreRef.current) {
         showMoreRef.current.scrollIntoView({ behavior: 'smooth' });
       }
@@ -74,7 +73,7 @@ const AllProducts = (props) => {
             image={getImage(el.image)}
             new_price={el.price}
             key={idx}
-            id={el.id}
+            id={el._id}
             name={el.name}
             old_price={el.prevPrice}
           />
