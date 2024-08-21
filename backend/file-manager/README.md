@@ -18,7 +18,7 @@ Installation
 1.	Clone the repository:
 bash
 Copy code
-git clone https://github.com/yourusername/somShop.git
+git clone https://github.com/abdiwoli/somShop.git
 2.	Navigate to the backend directory:
 bash
 Copy code
