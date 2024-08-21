@@ -33,7 +33,6 @@ class AuthController {
   }
 
     static async getDisconnect(req, res) {
-                console.log("I am called in dis ");
         const key = req.key;
         await redisClient.del(key);
         res.status(204);

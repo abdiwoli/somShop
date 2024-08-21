@@ -71,17 +71,10 @@ static async updateUser(req, res) {
   try {
     // Extract userId and other fields from the request body
     const { userId, name, email, password, admin, image, mimeType} = req.body;
-    // Validate the userId
-    console.log(userId);
-
     if (!ObjectId.isValid(userId)) {
       return res.status(400).json({ error: 'Invalid userId' });
     }
-
-    // Connect to the MongoDB collection
     const collection = await dbClient.client.db().collection('users');
-
-    // Check if the user exists
     const updateUser = await collection.findOne({ _id: new ObjectId(userId) });
     if (!updateUser) {
       return res.status(404).json({ error: 'User not found' });

@@ -50,7 +50,7 @@ router.get('/files/:id/data', FilesController.getFile);
 router.get('/complete-order', async (req, res) => {
   try {
     await capturePayment(req.query.token);
-    res.redirect('http://localhost:3000/orders?status=complete');
+    res.redirect('http://localhost/orders?status=complete');
   } catch (err) {
     console.log(err);
     res.send({ error: err });

@@ -14,7 +14,6 @@ import redisClient from '../utils/redis';
 class Product {
 
     static async getFiles(req, res) {
-        console.log("I am called ");
         try {
           const categoryName = req.query.name;
       
@@ -30,12 +29,8 @@ class Product {
               if (collection.name ==='files') {
                 const col = await dbClient.client.db().collection(collection.name);
                 const files = await col.find({}).toArray();
-                // Modify each file in the collection
+
                 const modifiedFiles = files.map(file => {
-                  // Replace `_id` with `id`
-                  file.id = file._id;
-                  delete file._id;
-                  // Normalize `localPath`
                   if (file.localPath) {
                     file.localPath = file.localPath.replace(/\\/g, '/');
                     file.image = file.localPath.split('/').pop();
@@ -43,14 +38,11 @@ class Product {
                       file.images = [file.image, file.image, file.image];
                     }
                   }
-
                   return file;
                 });            
-                  // Concatenate the modified files
                   allFiles = allFiles.concat(modifiedFiles);
               }
             }
-
             return res.status(200).json(allFiles);            
           }
         } catch (error) {
@@ -78,7 +70,7 @@ class Product {
         const key = `auth_${token}`;
         const userId = await redisClient.get(key);
         const collection = await dbClient.client.db().collection('files');
-        const product = await collection.findOne({_id: new ObjectId(itemId), userId:userId});
+          const product = await collection.findOne({_id: new ObjectId(itemId)});
         return product;
       }
 
@@ -268,7 +260,6 @@ class Product {
         file.image = file.localPath.split('/').pop();
         return file;
       })
-      console.log(latest);
       return res.status(200).json(latest);
 
     }
@@ -276,8 +267,6 @@ class Product {
     static async Trending(req, res) {
       try {
         const collection = await dbClient.client.db().collection('files');
-        
-        // Use the aggregation pipeline to group by category and pick the first file in each group
         const files = await collection.aggregate([
           {
             $group: {
@@ -295,8 +284,6 @@ class Product {
           file.image = file.localPath.split('/').pop();
           return file;
         })
-
-
     
         res.json(trending);
       } catch (error) {
