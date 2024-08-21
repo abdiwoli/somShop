@@ -57,6 +57,7 @@ frontend/
 ├── package-lock.json
 ├── package.json
 └── README.md
+
 Components Overview
 The src/Components/ directory contains various components that together form the frontend of the SomShop platform:
 •	Account: Manages user account settings and profile details.
@@ -72,7 +73,7 @@ The src/Components/ directory contains various components that together form the
 •	Images: Displays product images and galleries.
 •	Navbar: Contains the navigation bar for easy access to different sections of the site.
 •	NewProducts: Highlights newly added products on the platform.
-•	Notice: Displays important notices or alerts to the user.
+•	Notice: focuses on user messages.
 •	RelatedItems: Suggests items related to the one currently being viewed.
 •	Templates: Contains reusable page templates for consistent design.
 •	Trending: Showcases trending products that are popular among users.
