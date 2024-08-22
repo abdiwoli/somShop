@@ -1,6 +1,4 @@
-/* eslint-disable */
-import fs from 'fs';
-import { promises as fsPromises } from 'fs';
+import fs, { promises as fsPromises } from 'fs';
 import path from 'path';
 import { v4 } from 'uuid';
 import mime from 'mime-types';
@@ -14,102 +12,100 @@ class FilesController {
   static async postUpload(req, res) {
     const users = await Helper.getByToken(req, res);
     if (users && users.user) {
-        const files = await dbClient.client.db().collection('files');
-        const { folderPath = '../uploads' } = process.env;
-        const FOLDER_PATH = path.resolve(__dirname, folderPath);
+      const files = await dbClient.client.db().collection('files');
+      const { folderPath = '../uploads' } = process.env;
+      const FOLDER_PATH = path.resolve(__dirname, folderPath);
 
-        const { user } = users;
+      const { user } = users;
 
-        const {
-          name, 
-          prevPrice, 
-          price, 
-          type, 
-          parentId = '0', 
-          isPublic = false, 
-          data, 
-          mimeType, 
-          catagory,
-          description
+      const {
+        name,
+        prevPrice,
+        price,
+        type,
+        parentId = '0',
+        isPublic = false,
+        data,
+        mimeType,
+        catagory,
+        description,
       } = req.body;
-      
-      
 
-        if (!name) return res.status(400).json({ error: 'Missing name' });
-        if (!type) return res.status(400).json({ error: 'Missing type' });
-        if (!data && type !== 'folder') return res.status(400).json({ error: 'Missing data' });
-        if (parentId && parentId !== '0') {
-            const file = await dbClient.getFile(parentId);
-            if (!file) {
-                return res.status(400).json({ error: 'Parent not found' });
-            }
-            if (file && file.type !== 'folder') return res.status(400).json({ error: 'Parent is not a folder' });
+      if (!name) return res.status(400).json({ error: 'Missing name' });
+      if (!type) return res.status(400).json({ error: 'Missing type' });
+      if (!data && type !== 'folder') return res.status(400).json({ error: 'Missing data' });
+      if (parentId && parentId !== '0') {
+        const file = await dbClient.getFile(parentId);
+        if (!file) {
+          return res.status(400).json({ error: 'Parent not found' });
+        }
+        if (file && file.type !== 'folder') return res.status(400).json({ error: 'Parent is not a folder' });
+      }
+
+      if (type === 'folder') {
+        const result = await files.insertOne({
+          userId: user._id.toString(),
+          name,
+          type,
+          isPublic,
+          parentId,
+        });
+
+        if (result.insertedId) {
+          const newFile = await files.findOne({ _id: result.insertedId });
+          const edited = { id: newFile._id, ...newFile };
+          return res.status(201).json(edited);
+        }
+      } else {
+        if (!fs.existsSync(FOLDER_PATH)) {
+          fs.mkdirSync(FOLDER_PATH, { recursive: true });
         }
 
-        if (type === 'folder') {
-            const result = await files.insertOne({
-                userId: user._id.toString(),
-                name,
-                type,
-                isPublic,
-                parentId,
-            });
+        const fileId = v4();
+        let filePath;
 
-            if (result.insertedId) {
-                const newFile = await files.findOne({ _id: result.insertedId });
-                const edited = { id: newFile._id, ...newFile };
-                return res.status(201).json(edited);
-            }
+        if (type === 'image') {
+          const ext = mimeType.split('/')[1];
+          filePath = path.join(FOLDER_PATH, `${fileId}.${ext}`);
         } else {
-            if (!fs.existsSync(FOLDER_PATH)) {
-                fs.mkdirSync(FOLDER_PATH, { recursive: true });
-            }
-
-            const fileId = v4();
-            let filePath;
-            
-            if (type === 'image') {
-                const ext = mimeType.split('/')[1];
-                filePath = path.join(FOLDER_PATH, `${fileId}.${ext}`);
-            } else {
-                filePath = path.join(FOLDER_PATH, fileId);
-            }
-            
-            const fileData = Buffer.from(data, 'base64');
-            fs.writeFileSync(filePath, fileData);
-
-            const result = await files.insertOne({
-                userId: user._id.toString(),
-                name,
-                price,
-                prevPrice,
-                catagory,
-                type,
-                isPublic,
-                parentId,
-                localPath: filePath,
-                description
-            });
-
-            if (result.insertedId) {
-                const newFile = await files.findOne({ _id: result.insertedId });
-                const editedFile = Helper.fileToReturn(newFile);
-                const email = await dbClient.client.db().collection('subscribe').find({}).toArray();
-                const emails = email.filter(el=>el.email).map(el => el.email);
-                newProduct.add({product:newFile, emails});
-                return res.status(201).json(editedFile);
-            }
-
-            res.status(401).json({ error: 'Unauthorized' });
+          filePath = path.join(FOLDER_PATH, fileId);
         }
-    } else {
-        res.status(401).json({ error: 'Unauthorized' });
-    }
-}
 
+        const fileData = Buffer.from(data, 'base64');
+        fs.writeFileSync(filePath, fileData);
+
+        const result = await files.insertOne({
+          userId: user._id.toString(),
+          name,
+          price,
+          prevPrice,
+          catagory,
+          type,
+          isPublic,
+          parentId,
+          localPath: filePath,
+          description,
+        });
+
+        if (result.insertedId) {
+          const newFile = await files.findOne({ _id: result.insertedId });
+          const editedFile = Helper.fileToReturn(newFile);
+          const email = await dbClient.client.db().collection('subscribe').find({}).toArray();
+          const emails = email.filter((el) => el.email).map((el) => el.email);
+          newProduct.add({ product: newFile, emails });
+          return res.status(201).json(editedFile);
+        }
+
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+    } else {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
 
   static async getShow(req, res) {
-      const user = req.user;
+    const { user } = req;
     if (user) {
       const fileId = req.params.id;
       const userId = user._id;
@@ -125,13 +121,13 @@ class FilesController {
 
   static async getIndex(req, res) {
     try {
-        const user = req.user;
+      const { user } = req;
 
       const userId = user._id.toString();
       const { parentId = '0', page = 0 } = req.query;
 
       const pageNumber = parseInt(page, 10);
-      if (isNaN(pageNumber) || pageNumber < 0) {
+      if (Number.isNaN(pageNumber) || pageNumber < 0) {
         return res.status(400).json({ error: 'Invalid page number' });
       }
       const query = [
@@ -148,7 +144,7 @@ class FilesController {
   }
 
   static async putPublish(req, res) {
-    const user = req.user
+    const { user } = req;
 
     const userId = user._id.toString();
     const fileId = req.params.id;
@@ -162,7 +158,7 @@ class FilesController {
   }
 
   static async putUnpublish(req, res) {
-      const user = req.user;
+    const { user } = req;
 
     const userId = user._id.toString();
     const fileId = req.params.id;
@@ -182,7 +178,7 @@ class FilesController {
     const validSizes = [500, 250, 100];
 
     // Validate the size parameter
-    if (size && !validSizes.includes(parseInt(size))) {
+    if (size && !validSizes.includes(parseInt(size, 10))) {
       return res.status(400).json({ error: 'Invalid size parameter' });
     }
 
@@ -201,7 +197,7 @@ class FilesController {
     if (file.type === 'folder') {
       return res.status(400).json({ error: "A folder doesn't have content" });
     }
-        
+
     filePath = file.localPath;
     if (size && file.type === 'image') {
       filePath = `${filePath}_${size}`;
@@ -225,22 +221,20 @@ class FilesController {
       const collections = await db.collections();
 
       if (collections.length === 0) {
-        return res.status(404).json({ message: "No collections found in the database." });
+        return res.status(404).json({ message: 'No collections found in the database.' });
       }
 
-      for (const collection of collections) {
-        if (collection.collectionName !== 'users') {
-          await collection.drop();
-        }
-      }
+      await Promise.all(
+        collections.filter((collection) => collection.collectionName !== 'users')
+          .map((collection) => collection.drop()),
+      );
 
       return res.status(200).json({ message: "All collections deleted except 'users'." });
     } catch (error) {
-      console.error("Error deleting collections:", error);
-      return res.status(500).json({ error: "An error occurred while deleting collections." });
+      console.error('Error deleting collections:', error);
+      return res.status(500).json({ error: 'An error occurred while deleting collections.' });
     }
   }
-
 }
 
 export default FilesController;

@@ -8,17 +8,17 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
-const sendMail = async (receiver, content, subject=null, attachments = []) => {
+const sendMail = async (receiver, content, subject = null, attachments = []) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: receiver,
     subject: subject || 'Welcome email',
     text: content,
-    attachments
+    attachments,
   };
 
   try {

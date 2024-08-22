@@ -1,22 +1,23 @@
 import Queue from 'bull';
 import dotenv from 'dotenv';
-import sendMail from './utils/sendmail';
 import fs from 'fs';
+import path from 'path';
+import sendMail from './utils/sendmail';
+
 dotenv.config();
 const userQueue = new Queue('userQueue');
-import path from 'path';
 
 userQueue.process(async (job, done) => {
-  const { user} = job.data;
+  const { user } = job.data;
   try {
     if (!user) {
       return done(new Error('User not found'));
     }
 
-      console.log({ 'Sending email from:': process.env.EMAIL_USER, to: user.email });
-      const content = user.text || "wellcome to somShop\n you registration was succesfull";
+    console.log({ 'Sending email from:': process.env.EMAIL_USER, to: user.email });
+    const content = user.text || 'wellcome to somShop\n you registration was succesfull';
 
-      await sendMail(user.email, content, user.subject || null);
+    await sendMail(user.email, content, user.subject || null);
 
     console.log(`Welcome ${user.email}!`);
     done();
@@ -27,10 +28,9 @@ userQueue.process(async (job, done) => {
   return null;
 });
 
-
 const newProductQueue = new Queue('newProduct');
 newProductQueue.process(async (job, done) => {
-    const { product, emails } = job.data;
+  const { product, emails } = job.data;
 
   if (!product && emails) {
     return done(new Error('Product not found'));
@@ -43,12 +43,12 @@ newProductQueue.process(async (job, done) => {
     const attachments = [
       {
         filename: fileName,
-        path: product.localPath 
-      }
+        path: product.localPath,
+      },
     ];
 
-      try {
-          const to =   emails.join(',');
+    try {
+      const to = emails.join(',');
       await sendMail(to, content, attachments);
       done();
     } catch (error) {
@@ -59,8 +59,7 @@ newProductQueue.process(async (job, done) => {
     console.error('File not found:', product.localPath);
     done(new Error('File not found'));
   }
+  return null;
 });
-
-
 
 console.log('Job processor is running and ready to process jobs...');

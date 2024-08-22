@@ -13,19 +13,16 @@ import MessageController from '../controllers/MessageController';
 const router = Router();
 const upload = multer();
 
-router.get('/', (req, res) => {
-  res.send({ status: process.env.BASE_URL, status: 'working' });
-});
 router.post('/update-file/:id', Product.updateProduct);
 router.get('/products', Product.getFiles);
 router.get('/owner/:id', Helper.authAdmin, Product.isOwner);
 router.delete('/delete-product/:id', Helper.authUser, Product.deleteProduct);
 
 router.get('/status', AppController.getStatus);
-router.post('/subscribe/:email', Helper.Subscribe)
-router.post('/message', upload.none(), MessageController.newMessage)
-router.post('/reply-message', upload.none(), MessageController.replyMessage)
-router.get('/messages', Helper.authUser, MessageController.getMessage)
+router.post('/subscribe/:email', Helper.Subscribe);
+router.post('/message', upload.none(), MessageController.newMessage);
+router.post('/reply-message', upload.none(), MessageController.replyMessage);
+router.get('/messages', Helper.authUser, MessageController.getMessage);
 router.get('/stats', AppController.getStats);
 router.post('/users', UsersController.postNew);
 router.post('/limit-user-acces/:id/:block', Helper.authAdmin, UsersController.BlockUser);
@@ -38,8 +35,8 @@ router.get('/collections', Helper.authUser, FilesController.delete);
 router.get('/connect', AuthController.getConnect);
 router.get('/disconnect', Helper.authUser, AuthController.getDisconnect);
 router.get('/users/me', Helper.authUser, UsersController.getMe);
-router.get('/latest', Product.Latets)
-router.get('/trending', Product.Trending)
+router.get('/latest', Product.Latets);
+router.get('/trending', Product.Trending);
 router.post('/files', Helper.authUser, FilesController.postUpload);
 router.get('/files/:id', Helper.authUser, FilesController.getShow);
 router.get('/files', Helper.authUser, FilesController.getIndex);

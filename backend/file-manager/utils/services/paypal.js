@@ -5,19 +5,19 @@ import Orders from '../../controllers/orderController';
 
 dotenv.config();
 
-export async function generateAccessToken () {
+export async function generateAccessToken() {
   try {
     const response = await axios({
       url: `${process.env.PAYPAL_BASE_URL}/v1/oauth2/token`,
       method: 'post',
       data: qs.stringify({ grant_type: 'client_credentials' }),
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       auth: {
         username: process.env.PAYPAL_CLIENT_ID,
-        password: process.env.PAYPAL_CLIENT_SECRET
-      }
+        password: process.env.PAYPAL_CLIENT_SECRET,
+      },
     });
     console.log('data.access_token');
     return response.data.access_token;
@@ -37,7 +37,7 @@ export const createOrder = async (orders, userId) => {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       data: JSON.stringify({
         intent: 'CAPTURE',
@@ -50,28 +50,28 @@ export const createOrder = async (orders, userId) => {
               breakdown: {
                 item_total: {
                   currency_code: 'USD',
-                  value: orders.totalPrice
-                }
-              }
+                  value: orders.totalPrice,
+                },
+              },
             },
-            items: orders.items
-          }
+            items: orders.items,
+          },
         ],
         application_context: {
           return_url: `${process.env.BASE_URL}/complete-order`,
           cancel_url: `${process.env.BASE_URL}/cancel-order`,
           shipping_preference: 'NO_SHIPPING',
           user_action: 'PAY_NOW',
-          brand_name: 'SOM'
-        }
-      })
+          brand_name: 'SOM',
+        },
+      }),
     });
     try {
       Orders.postOrders(response.data.id, userId, orders);
     } catch (err) {
       return 'http://localhost:3000/error';
     }
-    return response.data.links.find(link => link.rel === 'approve').href;
+    return response.data.links.find((link) => link.rel === 'approve').href;
   } catch (error) {
     console.log(error);
     return error;
@@ -86,10 +86,10 @@ export const capturePayment = async (orderId) => {
       url: `${process.env.PAYPAL_BASE_URL}/v2/checkout/orders/${orderId}/capture`,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
-    const status = response.data.status;
+    const { status } = response.data;
     Orders.orderStatus(orderId, status);
     return response.data;
   } catch (error) {
@@ -98,16 +98,16 @@ export const capturePayment = async (orderId) => {
   }
 };
 
-export function formatOrders (ordersArray) {
+export function formatOrders(ordersArray) {
   // Extract items from the orders array
-  const items = ordersArray.map(order => ({
+  const items = ordersArray.map((order) => ({
     name: order.name,
-    description: order.description.length > 100 ? order.description.substring(0, 100) + '...' : order.description,
+    description: order.description.length > 100 ? `${order.description.substring(0, 100)}...` : order.description,
     quantity: Number(order.quantity),
     unit_amount: {
       currency_code: 'USD',
-      value: Number(order.price).toFixed(2)
-    }
+      value: Number(order.price).toFixed(2),
+    },
   }));
 
   // Sum the totalPrice of each item to get the combined total price
@@ -116,7 +116,7 @@ export function formatOrders (ordersArray) {
   // Create the formatted order object
   const formattedOrder = {
     totalPrice,
-    items
+    items,
   };
 
   return formattedOrder;
@@ -126,5 +126,5 @@ export default {
   generateAccessToken,
   createOrder,
   capturePayment,
-  formatOrders
+  formatOrders,
 };
