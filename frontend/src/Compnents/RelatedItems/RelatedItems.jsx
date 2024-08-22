@@ -12,7 +12,7 @@ const RelatedItems = () => {
         <hr />
         <div className='p-items'>
             {products.map((el, idx) =>{
-                return <Element image={getImage(el.image)} new_price={el.price} key={idx} id={el.id} name={el.name} oldPrice={el.prevPrice}  />
+                return <Element image={getImage(el.image)} new_price={el.price} key={idx} id={el._id} name={el.name} oldPrice={el.prevPrice}  />
             })}
         </div>
     </div>

@@ -2,7 +2,7 @@
   --primary-color: #4a90e2;
   --secondary-color: #50e3c2;
   --background-gradient: linear-gradient(135deg, #e0f7fa, #e0f2f1);
-  --left-right-background: rgba(6, 0, 6, 0.5); /* Unified background */
+  --left-right-background: rgba(6, 0, 6, 0.5);
   --text-color: #333;
   --button-hover-color: #357ab8;
   --white-color: #ffffff;
@@ -10,6 +10,7 @@
 
 .hook {
   display: flex;
+  flex-direction: row;
   height: 100vh;
   background: var(--background-gradient);
   color: var(--text-color);
@@ -91,53 +92,64 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  background: var(--left-right-background); /* Unified background */
+  background: var(--left-right-background);
   backdrop-filter: blur(10px);
 }
 
 .right img {
   width: 90%;
+  max-width: 600px; /* Limit the maximum width on larger screens */
 }
 
 /* Responsive Styles */
 @media (max-width: 1024px) {
   .left {
-    padding-left: 100px; /* Adjust padding for smaller screens */
+    padding-left: 100px;
   }
 
   .right img {
-    width: 100%; /* Scale down image size */
+    width: 100%;
+    max-width: 500px; /* Adjust max-width for medium screens */
   }
 }
 
 @media (max-width: 768px) {
+  .hook {
+    flex-direction: column; /* Stack left and right sections vertically */
+    text-align: center;
+  }
+
   .left {
-    padding-left: 50px; /* Further adjust padding */
+    padding: 0 20px;
+    order: 2; /* Move the left section below the image */
+  }
+
+  .right {
+    order: 1; /* Move the right section above */
   }
 
   .right img {
-    width: 100%; /* Further scale down image size */
+    width: 70%; /* Adjust image size for tablets */
   }
 
   .offer-btn {
-    width: 250px; /* Adjust button width */
-    height: 60px; /* Adjust button height */
-    font-size: 16px; /* Adjust font size */
+    width: 250px;
+    height: 60px;
+    font-size: 16px;
+    margin-top: 20px; /* Add some margin above the button */
   }
 }
 
 @media (max-width: 480px) {
-  .left {
-    padding-left: 20px; /* Further adjust padding */
-  }
-
   .right img {
-    width: 60%; /* Further scale down image size */
+    width: 90%; /* Adjust image size for small screens */
+    max-width: none; /* Remove max-width restriction */
   }
 
   .offer-btn {
-    width: 200px; /* Adjust button width */
-    height: 50px; /* Adjust button height */
-    font-size: 14px; /* Adjust font size */
+    width: 200px;
+    height: 50px;
+    font-size: 14px;
+    margin-top: 10px; /* Reduce margin for smaller screens */
   }
 }
