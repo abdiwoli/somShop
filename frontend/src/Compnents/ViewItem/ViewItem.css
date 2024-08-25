@@ -94,3 +94,43 @@
 .add-to-cart:hover {
     background-color: #c0392b;
 }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .view {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .view-left,
+    .view-right {
+        width: 100%;
+        flex: none;
+    }
+
+    .main-img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .list-images {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .thumbnail {
+        width: 60px;
+        height: 60px;
+    }
+
+    .view-price {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .add-to-cart {
+        width: 100%;
+        font-size: 1.1rem;
+        padding: 1rem;
+    }
+}

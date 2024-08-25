@@ -1,23 +1,24 @@
+/* Base styles remain the same */
 .deal-of {
     width: 64%;
     height: 60vh;
     margin-top: 40px;
     display: flex;
     margin: auto;
-    padding: 20px0 20px; 
-    margin-bottom: 100px; /* Adjusted bottom margin */
-    background: linear-gradient(180deg, #ffffff 0%, #e0f7fa 50%, #80deea 100%); /* Softer gradient */
-    border-radius: 15px; /* Added border radius for rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow for depth */
+    padding: 20px0 20px;
+    margin-bottom: 100px;
+    background: linear-gradient(180deg, #ffffff 0%, #e0f7fa 50%, #80deea 100%);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 100;
 }
 
 .right-deal img {
-    max-width: 100%; 
-    max-height: 100%; 
-    object-fit: contain; 
-    border-radius: 10px; 
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
 }
 
 .left-deal {
@@ -25,45 +26,54 @@
     flex: 1;
     flex-direction: column;
     justify-content: center;
-    padding: 20px; /* Added padding for spacing */
+    padding: 20px;
 }
 
 .left-deal h1 {
-    color: #333; /* Darker shade for better readability */
-    font-size: 60px; 
-    font-weight: 700; /* Slightly bolder font weight */
-    margin: 0; /* Removed default margin */
+    color: #333;
+    font-size: 60px;
+    font-weight: 700;
+    margin: 0;
 }
 
 .left-deal p {
-    color: #555; /* Slightly lighter shade for text */
-    font-size: 20px; /* Adjusted font size */
-    font-weight: 500; /* Slightly lighter font weight */
-    margin: 10px 0; /* Added margin for spacing */
+    color: #555;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 10px 0;
 }
 
 .right-deal {
     flex: 1;
     display: flex;
-    padding-top: 20px; /* Adjusted padding */
+    padding-top: 20px;
     align-items: center;
     justify-content: flex-end;
 }
 
 .left-deal button {
-    margin-top: 20px; /* Adjusted margin for spacing */
+    margin-top: 20px;
     cursor: pointer;
-    width: 250px; /* Adjusted width */
-    height: 60px; /* Adjusted height */
-    border-radius: 30px; /* Rounded corners */
+    width: 250px;
+    height: 60px;
+    border-radius: 30px;
     border: none;
     color: #fff;
-    background: #ff4081; /* Vibrant pink for the button */
+    background: #ff4081;
     font-weight: 600;
-    font-family: 'Arial', sans-serif; 
-    transition: background 0.3s; 
+    font-family: 'Arial', sans-serif;
+    transition: background 0.3s;
 }
 
 .left-deal button:hover {
-    background: #f50057; 
+    background: #f50057;
+}
+
+/* Responsive styles for the button */
+@media (max-width: 768px) {
+    .left-deal button {
+        width: 180px;
+        height: 50px;
+        font-size: 0.9rem;
+    }
 }

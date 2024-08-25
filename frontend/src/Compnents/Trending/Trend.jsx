@@ -17,7 +17,7 @@ const Trend = () => {
   return (
     <div className='products'>
       
-        <h1>Trending in Electronics</h1>
+        <h1>Trending Products</h1>
         <hr />
         <div className='products-p p'>
             {products.map((el, idx)=>{

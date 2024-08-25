@@ -3,6 +3,7 @@ import { Navbar } from './Compnents/Navbar/Navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainPage from './Compnents/Templates/MainPage';
 import Items from './Compnents/Templates/Items';
+import DealsView from './Compnents/Deals/DealsView'
 import Cart from './Compnents/Templates/Cart';
 import Categories from './Compnents/Templates/Categories';
 import Auth from './Compnents/Templates/Auth';
@@ -38,6 +39,7 @@ function App() {
           <Route path='/' element={<MainPage kind='main' />} />
           <Route path='/products' element={<AllProducts />} />
           <Route path='/messages' element={<Messages />} />
+          <Route path='/deals' element={<DealsView /> } />
           <Route path='/contact' element={<ContactUs />} />
           <Route path='/terms' element={<TermsOfService />} />
           <Route path='/privacy' element={<PrivacyPolicy />} />
