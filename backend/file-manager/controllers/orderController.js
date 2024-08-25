@@ -1,6 +1,15 @@
 import dbClient from '../utils/db';
 
 class Orders {
+  /**
+   * Creates a new order in the database.
+   *
+   * @param {string} orderId - The unique identifier for the order.
+   * @param {string} userId - The identifier of the user placing the order.
+   * @param {Object} data - Additional order details to be saved.
+   * @returns {Promise<string>} The ID of the newly inserted order.
+   * @throws {Error} Throws an error if there is an issue with inserting the order.
+   */
   static async postOrders(orderId, userId, data) {
     try {
       const ordersCollection = dbClient.client.db().collection('orders');
@@ -18,6 +27,14 @@ class Orders {
     }
   }
 
+  /**
+   * Updates the status of an existing order.
+   *
+   * @param {string} orderId - The unique identifier for the order.
+   * @param {string} status - The new status to be set for the order.
+   * @returns {Promise<Object>} Result of the update operation.
+   * @throws {Error} Throws an error if there is an issue with updating the order status.
+   */
   static async orderStatus(orderId, status) {
     try {
       const ordersCollection = dbClient.client.db().collection('orders');
@@ -35,6 +52,13 @@ class Orders {
     }
   }
 
+  /**
+   * Retrieves all orders for the authenticated user.
+   *
+   * @param {Object} req - The request object containing the user information.
+   * @param {Object} res - The response object to send the orders.
+   * @returns {Promise<void>}
+   */
   static async getOrders(req, res) {
     const { user } = req;
     const collection = await dbClient.client.db().collection('orders');

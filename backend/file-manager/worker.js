@@ -43,13 +43,13 @@ newProductQueue.process(async (job, done) => {
     const attachments = [
       {
         filename: fileName,
-        path: product.localPath,
+        path: `https://som.abdiwoli.tech/images/${product.image}`
       },
     ];
 
     try {
       const to = emails.join(',');
-      await sendMail(to, content, attachments);
+      await sendMail(to, content, 'new product', attachments);
       done();
     } catch (error) {
       console.error('Error:', error.message);

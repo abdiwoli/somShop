@@ -17,7 +17,7 @@ router.post('/update-file/:id', Product.updateProduct);
 router.get('/products', Product.getFiles);
 router.get('/owner/:id', Helper.authAdmin, Product.isOwner);
 router.delete('/delete-product/:id', Helper.authUser, Product.deleteProduct);
-
+router.get('/deals', Product.SpecialDeals);
 router.get('/status', AppController.getStatus);
 router.post('/subscribe/:email', Helper.Subscribe);
 router.post('/message', upload.none(), MessageController.newMessage);
@@ -55,7 +55,7 @@ router.get('/complete-order', async (req, res) => {
 });
 
 router.get('/cancel-order', (req, res) => {
-  res.redirect('http://localhost');
+  res.redirect(`${process.env.FRONTEND_URL}`);
 });
 
 router.post('/pay', async (req, res) => {
@@ -63,7 +63,7 @@ router.post('/pay', async (req, res) => {
   const { orders, userToken } = req.body;
   const user = Helper.userOrder(userToken);
   if (!user) {
-    return res.redirect('http://localhost:3000/login');
+    return res.redirect(`${process.env.FRONTEND_URL}/login`);
   }
   const parsedOrders = JSON.parse(orders);
   const formated = formatOrders(parsedOrders);

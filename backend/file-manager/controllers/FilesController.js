@@ -1,4 +1,4 @@
-import fs, { promises as fsPromises } from 'fs';
+/* eslint-disable */
 import path from 'path';
 import { v4 } from 'uuid';
 import mime from 'mime-types';
@@ -9,6 +9,67 @@ import dbClient from '../utils/db';
 const newProduct = new Queue('newProduct');
 
 class FilesController {
+  /**
+ * Handles the upload of files or folders. This method supports uploading both files and folders.
+ * For files, it processes the uploaded data, saves it to the filesystem, and stores metadata in the database.
+ * For folders, it only stores metadata in the database.
+ *
+ * @param {Object} req - The request object containing the upload data and metadata.
+ * @param {Object} res - The response object used to send the response.
+ *
+ * @returns {Object} - A JSON response containing the uploaded file or folder metadata.
+ *
+ * @throws {Error} - If there are issues with missing fields, invalid parent folder, or file operations.
+ *
+ * @example
+ * // Example request body for file upload:
+ * {
+ *   "name": "example.jpg",
+ *   "prevPrice": 10.00,
+ *   "price": 15.00,
+ *   "type": "image",
+ *   "parentId": "607c191e810c19729de860ea",
+ *   "isPublic": true,
+ *   "data": "base64-encoded-file-data",
+ *   "mimeType": "image/jpeg",
+ *   "catagory": "photos",
+ *   "description": "An example image"
+ * }
+ *
+ * // Example response:
+ * {
+ *   "id": "607c191e810c19729de860eb",
+ *   "userId": "60d5f4896b4f1d001f6a0a20",
+ *   "name": "example.jpg",
+ *   "price": 15.00,
+ *   "prevPrice": 10.00,
+ *   "catagory": "photos",
+ *   "type": "image",
+ *   "isPublic": true,
+ *   "parentId": "607c191e810c19729de860ea",
+ *   "localPath": "/uploads/1234-5678.jpg",
+ *   "description": "An example image"
+ * }
+ *
+ * @example
+ * // Example request body for folder upload:
+ * {
+ *   "name": "New Folder",
+ *   "type": "folder",
+ *   "parentId": "607c191e810c19729de860ea",
+ *   "isPublic": false
+ * }
+ *
+ * // Example response:
+ * {
+ *   "id": "607c191e810c19729de860ec",
+ *   "userId": "60d5f4896b4f1d001f6a0a20",
+ *   "name": "New Folder",
+ *   "type": "folder",
+ *   "isPublic": false,
+ *   "parentId": "607c191e810c19729de860ea"
+ * }
+ */
   static async postUpload(req, res) {
     const users = await Helper.getByToken(req, res);
     if (users && users.user) {
@@ -102,138 +163,6 @@ class FilesController {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  static async getShow(req, res) {
-    const { user } = req;
-    if (user) {
-      const fileId = req.params.id;
-      const userId = user._id;
-      const file = await dbClient.getFile(fileId);
-      if (file && file.userId === userId.toString()) {
-        const editedFile = Helper.fileToReturn(file);
-        return res.status(200).json(editedFile);
-      }
-      return res.status(404).json({ error: 'Not found' });
-    }
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  static async getIndex(req, res) {
-    try {
-      const { user } = req;
-
-      const userId = user._id.toString();
-      const { parentId = '0', page = 0 } = req.query;
-
-      const pageNumber = parseInt(page, 10);
-      if (Number.isNaN(pageNumber) || pageNumber < 0) {
-        return res.status(400).json({ error: 'Invalid page number' });
-      }
-      const query = [
-        { $match: { parentId, userId } },
-        { $skip: pageNumber * 20 },
-        { $limit: 20 },
-      ];
-      const files = await Helper.getFilesWithPagination(query);
-      return res.status(200).json(files);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-  }
-
-  static async putPublish(req, res) {
-    const { user } = req;
-
-    const userId = user._id.toString();
-    const fileId = req.params.id;
-    const file = await dbClient.getFile(fileId);
-    if (!file || file.userId.toString() !== userId.toString()) {
-      return res.status(404).json({ error: 'Not found' });
-    }
-    file.isPublic = true;
-    await dbClient.updateFile(fileId, true);
-    return res.status(200).json(Helper.fileToReturn(file));
-  }
-
-  static async putUnpublish(req, res) {
-    const { user } = req;
-
-    const userId = user._id.toString();
-    const fileId = req.params.id;
-    const file = await dbClient.getFile(fileId);
-    if (!file || file.userId.toString() !== userId.toString()) {
-      return res.status(404).json({ error: 'Not found' });
-    }
-
-    file.isPublic = false;
-    await dbClient.updateFile(fileId, false);
-    return res.status(200).json(Helper.fileToReturn(file));
-  }
-
-  static async getFile(req, res) {
-    const fileId = req.params.id;
-    const { size } = req.query;
-    const validSizes = [500, 250, 100];
-
-    // Validate the size parameter
-    if (size && !validSizes.includes(parseInt(size, 10))) {
-      return res.status(400).json({ error: 'Invalid size parameter' });
-    }
-
-    const file = await dbClient.getFile(fileId);
-    if (!file) {
-      return res.status(404).json({ error: 'Not found' });
-    }
-    if (!file.isPublic) {
-      const users = await Helper.getByToken(req, res);
-      if (users.error) return res.status(404).json({ error: 'not found' });
-      const userId = users.user._id.toString();
-      if (file && file.userId.toString() !== userId) return res.status(404).json({ error: 'not found' });
-    }
-
-    let filePath;
-    if (file.type === 'folder') {
-      return res.status(400).json({ error: "A folder doesn't have content" });
-    }
-
-    filePath = file.localPath;
-    if (size && file.type === 'image') {
-      filePath = `${filePath}_${size}`;
-    }
-    if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'Not found' });
-
-    try {
-      const fileBuffer = await fsPromises.readFile(filePath);
-      const mimeType = mime.contentType(file.name);
-      res.setHeader('Content-Type', mimeType);
-      return res.status(200).send(fileBuffer);
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-  }
-
-  static async delete(req, res) {
-    try {
-      const db = dbClient.client.db();
-      const collections = await db.collections();
-
-      if (collections.length === 0) {
-        return res.status(404).json({ message: 'No collections found in the database.' });
-      }
-
-      await Promise.all(
-        collections.filter((collection) => collection.collectionName !== 'users')
-          .map((collection) => collection.drop()),
-      );
-
-      return res.status(200).json({ message: "All collections deleted except 'users'." });
-    } catch (error) {
-      console.error('Error deleting collections:', error);
-      return res.status(500).json({ error: 'An error occurred while deleting collections.' });
-    }
   }
 }
 

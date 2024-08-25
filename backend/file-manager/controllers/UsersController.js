@@ -11,7 +11,31 @@ const userQueue = new Queue('userQueue');
 
 const { v4: uuidv4 } = require('uuid');
 
+/**
+ * Controller for handling user-related operations.
+ * Includes methods for creating, deleting, retrieving, updating, and blocking users.
+ */
 class UsersController {
+  /**
+   * Creates a new user in the system.
+   *
+   * @param {Object} req - The request object, expected to contain `email`, `password`, and `name`.
+   * @param {Object} res - The response object.
+   * @returns {void} Responds with the user's ID and email if successful, or an error message if not.
+   *
+   * @example
+   * // Successful response
+   * // {
+   * //   "id": "unique-user-id",
+   * //   "email": "user@example.com"
+   * // }
+   *
+   * @example
+   * // Error response (email already exists)
+   * // {
+   * //   "error": "Already exist"
+   * // }
+   */
   static async postNew(req, res) {
     const { email, password, name } = req.body;
     if (!email) {
@@ -33,6 +57,25 @@ class UsersController {
     return res.status(500).json({ error: 'error' });
   }
 
+  /**
+   * Deletes a user from the system.
+   *
+   * @param {Object} req - The request object, expected to contain `email`.
+   * @param {Object} res - The response object.
+   * @returns {void} Responds with the deleted email if successful, or an error message if not.
+   *
+   * @example
+   * // Successful response
+   * // {
+   * //   "deleted email": "user@example.com"
+   * // }
+   *
+   * @example
+   * // Error response (email not found)
+   * // {
+   * //   "can't delete email": "user@example.com"
+   * // }
+   */
   static async delUser(req, res) {
     if (!req.user && (req.user && !req.user.admin)) {
       return res.status(401).json({ error: 'unauthorized' });
@@ -47,6 +90,23 @@ class UsersController {
     return res.status(404).json({ "can't delate email": email });
   }
 
+  /**
+   * Retrieves the details of the authenticated user.
+   *
+   * @param {Object} req - The request object, expected to contain the authenticated user.
+   * @param {Object} res - The response object.
+   * @returns {void} Responds with the user's details.
+   *
+   * @example
+   * // Successful response
+   * // {
+   * //   "id": "unique-user-id",
+   * //   "email": "user@example.com",
+   * //   "admin": true,
+   * //   "image": "user-image.jpg",
+   * //   "name": "John Doe"
+   * // }
+   */
   static async getMe(req, res) {
     const { user } = req;
     return res.status(200).json({
@@ -58,6 +118,26 @@ class UsersController {
     });
   }
 
+  /**
+   * Retrieves all users in the system.
+   *
+   * @param {Object} req - The request object, expected to contain the authenticated admin user.
+   * @param {Object} res - The response object.
+   * @returns {void} Responds with a list of all users.
+   *
+   * @example
+   * // Successful response
+   * // [
+   * //   {
+   * //     "id": "unique-user-id",
+   * //     "email": "user@example.com",
+   * //     "admin": true,
+   * //     "image": "user-image.jpg",
+   * //     "name": "John Doe"
+   * //   },
+   * //   ...
+   * // ]
+   */
   static async getAll(req, res) {
     if (!req.user && (req.user && !req.user.admin)) {
       return res.status(401).json({ error: 'unauthorized' });
@@ -67,6 +147,25 @@ class UsersController {
     return res.status(200).json(users);
   }
 
+  /**
+   * Updates a user's details in the system.
+   *
+   * @param {Object} req - The request object, expected to contain the user's ID and fields to update.
+   * @param {Object} res - The response object.
+   * @returns {void} Responds with a success message if the user is updated, or an error message if not.
+   *
+   * @example
+   * // Successful response
+   * // {
+   * //   "message": "User updated successfully"
+   * // }
+   *
+   * @example
+   * // Error response (user not found)
+   * // {
+   * //   "error": "User not found"
+   * // }
+   */
   static async updateUser(req, res) {
     if (!req.user && (req.user && !req.user.admin)) {
       return res.status(401).json({ error: 'unauthorized' });
@@ -101,10 +200,14 @@ class UsersController {
       }
 
       // Prepare the update payload
+      let shaiP;
+      if (password) {
+        shaiP = SHA1(password);
+      }
       const payload = {
         ...(name && { name }),
         ...(email && { email }),
-        ...(password && { password }),
+        ...(shaiP && { password: shaiP }),
         ...(admin !== undefined && { admin }),
         ...(filePath && { image: `${fileId}.${ext}` }),
       };
@@ -121,6 +224,19 @@ class UsersController {
     }
   }
 
+  /**
+   * Blocks or unblocks a user in the system.
+   *
+   * @param {Object} req - The request object, expected to contain the authenticated admin user and user ID to block/unblock.
+   * @param {Object} res - The response object.
+   * @returns {void} Responds with an update status if successful, or an error message if not.
+   *
+   * @example
+   * // Successful response
+   * // {
+   * //   "status": "updated"
+   * // }
+   */
   static async BlockUser(req, res) {
     if (!req.user && (req.user && !req.user.admin)) {
       console.log({ user: req.user });
