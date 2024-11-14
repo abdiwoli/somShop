@@ -15,7 +15,7 @@ Installation
 1.	Clone the repository:
 bash
 Copy code
-git clone https://github.com/yourusername/somShop.git
+git clone https://github.com/abdiwoli/somShop.git
 2.	Navigate to the frontend directory:
 bash
 Copy code
@@ -26,6 +26,8 @@ Copy code
 npm install
 4.	Start the development server:
 npm start
+
+
 Project Structure
 frontend/
 ├── public/
